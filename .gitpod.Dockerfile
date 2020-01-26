@@ -13,6 +13,8 @@ ENV ANDROID_HOME /opt/android-sdk-linux
 
 USER root
 
+ENV ANDROID_HOME /opt/android-sdk-linux
+
 RUN apt update -qq && apt install zip unzip
 
 RUN cd /opt && \
