@@ -1,1 +1,1 @@
-FROM pranav8350/gitpod-android
+FROM pranav8350/gitpod-android:latest
