@@ -1,3 +1,5 @@
+![Android CI](https://github.com/NBCRobotics/SkyStone/workflows/Android%20CI/badge.svg?branch=master)
+
 ## NOTICE
 
 This repository contains the public FTC SDK for the SKYSTONE (2019-2020) competition season.  
