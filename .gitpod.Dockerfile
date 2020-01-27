@@ -9,24 +9,23 @@ USER gitpod
 #
 # More information: https://www.gitpod.io/docs/42_config_docker/
 
-ENV ANDROID_HOME /opt/android-sdk-linux
-
 USER root
 
-RUN apt update -qq && apt install zip unzip
+RUN apt update -qq && apt install zip unzip -qq
 
 RUN cd /opt && \
     wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip && \
-    unzip -q *.zip -d ${ANDROID_HOME} && \
+    unzip -q *.zip -d /opt/android-sdk-linux && \
     rm *.zip
 
-RUN chmod -R 777 ${ANDROID_HOME}
+RUN chmod -R 777 /opt/android-sdk-linux
 
 RUN apt clean -qq
 
 USER gitpod
 
-ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools
+ENV PATH ${PATH}:/opt/android-sdk-linux/tools:/opt/android-sdk-linux/tools/bin:/opt/android-sdk-linux/platform-tools
+ENV ANDROID_HOME /opt/android-sdk-linux
 
 RUN bash -c "source ~/.sdkman/bin/sdkman-init.sh && \
                 sdk install java 8.0.232-open"
