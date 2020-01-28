@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
-import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.getMotorVeloci
  * satisfies the requirements, SampleMecanumDriveREVOptimized is highly recommended.
  */
 public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
+    private DcMotorEx fLDrive, bLDrive, bRDrive, fRDrive;
     private List<DcMotorEx> motors;
     private BNO055IMU imu;
 
@@ -45,12 +44,12 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
         // upward (normal to the floor) using a command like the following:
         // BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        fLDrive = hardwareMap.get(DcMotorEx.class, "fLDrive");
+        bLDrive = hardwareMap.get(DcMotorEx.class, "bLDrive");
+        bRDrive = hardwareMap.get(DcMotorEx.class, "bRDrive");
+        fRDrive = hardwareMap.get(DcMotorEx.class, "fRDrive");
 
-        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
+        motors = Arrays.asList(fLDrive, bLDrive, bRDrive, fRDrive);
 
         for (DcMotorEx motor : motors) {
             if (RUN_USING_ENCODER) {
@@ -71,7 +70,7 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
 
     @Override
     public PIDCoefficients getPIDCoefficients(DcMotor.RunMode runMode) {
-        PIDFCoefficients coefficients = leftFront.getPIDFCoefficients(runMode);
+        PIDFCoefficients coefficients = fLDrive.getPIDFCoefficients(runMode);
         return new PIDCoefficients(coefficients.p, coefficients.i, coefficients.d);
     }
 
@@ -105,10 +104,10 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
+        fLDrive.setPower(v);
+        bLDrive.setPower(v1);
+        bRDrive.setPower(v2);
+        fRDrive.setPower(v3);
     }
 
     @Override
