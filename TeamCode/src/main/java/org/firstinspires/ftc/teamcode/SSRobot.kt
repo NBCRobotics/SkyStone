@@ -32,8 +32,8 @@ class SSRobot {
         touch = ahwdMap.digitalChannel.get("touch")
 
         //Setting direction
-        leftDrive?.direction = motF
-        rightDrive?.direction = motR
+        leftDrive?.direction = motR
+        rightDrive?.direction = motF
         vSlide?.direction = motR
         hSlide?.direction = serR
         claw?.direction = serF
@@ -41,8 +41,8 @@ class SSRobot {
 
         leftDrive?.power = 0.0
         rightDrive?.power = 0.0
-        leftDrive?.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
-        rightDrive?.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+        leftDrive?.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        rightDrive?.mode = DcMotor.RunMode.RUN_USING_ENCODER
         vSlide?.mode = DcMotor.RunMode.RUN_USING_ENCODER //Use encoders for linear slide motor
 
     }

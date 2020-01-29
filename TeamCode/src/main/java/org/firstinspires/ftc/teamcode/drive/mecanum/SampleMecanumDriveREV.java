@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -28,6 +29,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.getMotorVeloci
  * Simple mecanum drive hardware implementation for REV hardware. If your hardware configuration
  * satisfies the requirements, SampleMecanumDriveREVOptimized is highly recommended.
  */
+@Disabled
 public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
     private DcMotorEx fLDrive, bLDrive, bRDrive, fRDrive;
     private List<DcMotorEx> motors;
@@ -67,10 +69,10 @@ public class SampleMecanumDriveREV extends SampleMecanumDriveBase {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-        fLDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        bLDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        fRDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        bRDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        fLDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        bLDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        fRDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        bRDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
