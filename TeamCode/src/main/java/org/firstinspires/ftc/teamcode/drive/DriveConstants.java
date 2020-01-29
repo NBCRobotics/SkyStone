@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
 import com.qualcomm.hardware.motors.NeveRest20Gearmotor;
+import com.qualcomm.hardware.motors.RevRobotics40HdHexMotor;
 import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
@@ -29,7 +30,7 @@ public class DriveConstants {
      */
     private static final MotorConfigurationType MOTOR_CONFIG =
             /* TODO: come back to this if we don't change the robot */
-            MotorConfigurationType.getMotorType(RevRoboticsCoreHexMotor.class);
+            MotorConfigurationType.getMotorType(RevRobotics40HdHexMotor.class);
 
     /*
      * Set the first flag appropriately. If using the built-in motor velocity PID, update

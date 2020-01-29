@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDcMotorController;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.DifferentialControlLoopCoefficients;
@@ -20,6 +21,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.encoderTicksTo
 /*
  * Simple mecanum drive hardware implementation for Modern Robotics hardware.
  */
+@Disabled
 public class SampleMecanumDriveMR extends SampleMecanumDriveBase {
     /*
      * As you may know, the MR communication system is implemented asynchronously. Thus, all
