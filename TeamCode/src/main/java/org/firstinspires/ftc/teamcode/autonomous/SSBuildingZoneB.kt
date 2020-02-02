@@ -18,61 +18,65 @@ class SSBuildingZoneB : LinearOpMode()
     override fun runOpMode() {
         telemetry.addData("Status: ", "Autonomous Initialized")
         telemetry.update()
-
         robot.init(hardwareMap)
         //robot.vSlide?.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
         //robot.vSlide?.mode = DcMotor.RunMode.RUN_USING_ENCODER
         robot.vSlide?.mode = DcMotor.RunMode.RUN_TO_POSITION
-        robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition
-
         waitForStart()
         robot.leftHook?.position = 0.0
         robot.rightHook?.position = 0.0
-        //robot.vSlide?.targetPosition = 50 + robot.vSlide!!.currentPosition
-        robot.vSlide?.power = 1.0
-        pause()
-        robot.drive(0.50) //Drives Forward to the Stones
-        sleep(1700)
-        pause()
-        robot.claw?.position = 0.0
-        pause()
+        robot.vSlide?.targetPosition = 90 + robot.vSlide!!.currentPosition
+        robot.vSlide?.power = 0.5
+        robot.strafe(0.75) //align with foundation
         sleep(500)
-        /*robot.vSlide?.targetPosition = 50 + robot.vSlide!!.currentPosition
-        sleep(500)*/
-        robot.drive(-0.50)
-        sleep(750)
         pause()
-        robot.strafe(1.0)//Heads to Foundation
+        robot.drive(0.50) //Drives Forward to the Foundation
+        sleep(1100)
+        pause()
+        robot.strafe(-1.0)
         sleep(3550)
         pause()
-        robot.vSlide?.targetPosition = 2500 + robot.vSlide!!.currentPosition
-        sleep(750)
-        robot.hSlide?.position = 0.3
-        sleep(550)
-        robot.hSlide?.position = 0.5
-        robot.drive(0.5)
-        sleep(900)
-        pause()
         robot.claw?.position = robot.clawPinchPos
+        sleep(1000)
+        robot.drive(0.5)
+        sleep(800)
         pause()
-        robot.drive(-0.5)
-        sleep(1200)
-        pause()
-        robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition - 2500
-        sleep(750)
-        pause()
-        robot.hSlide?.position = 0.7
-        sleep(550)
-        pause()
-        robot.strafe(-0.5)
-        sleep(2100)
         robot.claw?.position = 0.0
         pause()
-        robot.strafe(-0.5)
-        sleep(2400)
+        robot.drive(-0.4)
+        sleep(750)
+        pause()
+        robot.strafe(1.0)
+        sleep(2700)
+        pause()
+/*        robot.vSlide?.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+        robot.vSlide?.power = 0.5
+        sleep(1000)
+        robot.claw?.position = 0.0
+        robot.vSlide?.power = -0.5
+        sleep(1000)*/
+        robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition + 3000
+        sleep(1500)
+        robot.strafe(1.0)
+        sleep(800)
         pause()
         //robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition - 100
-
+        robot.claw?.position = robot.clawPinchPos
+        sleep(1000)
+        robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition - 3000
+        robot.strafe(-1.0)
+        sleep(2000)
+/*        robot.leftHook?.position = 0.7
+        robot.rightHook?.position = 0.72
+        robot.drive(0.5)
+        sleep(110)
+        pause()
+        robot.drive(-1.0) //Drives Back the Foundation
+        sleep(1100)
+        pause()
+        robot.strafe(0.5)
+        sleep(1000)
+        pause() */
         //https://www.reddit.com/r/FTC/comments/78l5o0/how_to_program_encoders/
         telemetry.addData("Status: ", "Autonomous Terminated")
         telemetry.update()
