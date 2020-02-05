@@ -47,7 +47,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "SSTensorAuto", group = "Concept")
+@TeleOp(name = "SSTensorAuto", group = "Autonomous")
 //@Disabled
 class SSTensorAuto : LinearOpMode() {
     /**

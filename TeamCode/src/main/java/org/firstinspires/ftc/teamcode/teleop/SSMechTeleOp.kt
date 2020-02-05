@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.SSMechRobot
-import kotlin.math.abs
-import kotlin.math.max
 
 /**
  * Created by KasaiYuki on 9/20/2019.
@@ -17,7 +15,6 @@ class SSMechTeleOp : OpMode() {
     //using robot class for motors, servos etc
     val robot = SSMechRobot()
     val zero = 0.0.toFloat()
-    var slowDown = 1.85//default
     var tooHigh = true //if v slide is too high
     var tooLow = true //if v slide is too low
     var touched = false //if touch sensor is pressed
@@ -53,7 +50,7 @@ class SSMechTeleOp : OpMode() {
          * Gamepad2: Crane: Right Stick Y = Y Slide; Left Bumper = pinch claw; Left Stick Y= X Slide; a = hook
          */
 
-        povMode()
+        robot.mechanumPOV(gamepad1)
 
         touched = !robot.touch!!.state //true if not pressed
 
@@ -92,12 +89,15 @@ class SSMechTeleOp : OpMode() {
 
         telemetry.addData("Linear Slide V: $linSlidePow", "") //kotlin string templates
 
+        telemetry.addData("Drive Motors:","front left: ${robot.fLDrive?.power}, front right: ${robot.fRDrive?.power}, " +
+                "back left: ${robot.bLDrive?.power}, back right: ${robot.bRDrive?.power}")
+
         telemetry.addData("Attachments:", "HSlide = ${robot.hSlide?.position?.toFloat()}, " +
                 "Claw = ${robot.claw?.position?.toFloat()}, " +
                 "VSlide = ${curPos.toFloat()}", "")
 
-        telemetry.addData("GP: stick 1 = ${gamepad1.left_stick_x}, ${gamepad1.left_stick_y}; " +
-                "stick 2 = ${gamepad1.right_stick_x}, ${gamepad1.right_stick_y}", "")
+        telemetry.addData("Gamepad Stick Vals:","Left Stick= ${gamepad1.left_stick_x}, ${gamepad1.left_stick_y}; " +
+                "Right Stick = ${gamepad1.right_stick_x}, ${gamepad1.right_stick_y}")
 
         telemetry.addData("Hook: ${robot.leftHook?.position}", "")
     }
@@ -108,54 +108,20 @@ class SSMechTeleOp : OpMode() {
         telemetry.update()
     }
 
-    fun povMode() {
-        //POV Mode-left joystick=power(y power and strafing), right joystick=turning
-        // Put powers in the range of -1 to 1 only if they aren't already (not
-        // checking would cause us to always drive at full speed)
 
-        slowDown = gamepad1.left_trigger + 1.0 //Dynamic Slowdown
-        //slowDown = if(gamepad1.left_bumper) 1.75 else 1.00 //condensed if else
-
-        var drive = (gamepad1.left_stick_y).toDouble()
-        var turn = -gamepad1.left_stick_x.toDouble() * 1.5
-        var strafe = -gamepad1.right_stick_x.toDouble()
-        var nor = 0.0
-
-        var frontLeftPower = (drive + turn + strafe)
-        var backLeftPower = (drive - turn + strafe)
-        var frontRightPower = (drive - turn - strafe)
-        var backRightPower = (drive + turn - strafe)
-
-        if (abs(frontLeftPower) > 1 || abs(backLeftPower) > 1 ||
-                abs(frontRightPower) > 1 || abs(backRightPower) > 1) { //normalizing values to [-1.0,1.0]
-            // Find the largest power
-            nor = max(abs(frontLeftPower), abs(backLeftPower))
-            nor = max(abs(frontRightPower), nor)
-            nor = max(abs(backRightPower), nor)
-        }
-        // Divide everything by nor (it's positive so we don't need to worry
-        // about signs)
-        //need to compensate for difference in core hex and 40:1 motors
-        robot.fLDrive?.power = (frontLeftPower / slowDown) * 1.05
-        robot.bLDrive?.power = (backLeftPower / slowDown) * 1.05 / 1.12
-        robot.fRDrive?.power = (frontRightPower / slowDown) * 1.05
-        robot.bRDrive?.power = (backRightPower / slowDown) * 1.05 / 1.12
-        telemetry.addData("front left: ${robot.fLDrive?.power}, front right: ${robot.fRDrive?.power}, " +
-                "back left: ${robot.bLDrive?.power}, back right: ${robot.bRDrive?.power}; normalized value: $nor", "")
-    }
     fun tankMode()
     {
         //slowDown = gamepad1.left_trigger + 2.0
-        slowDown = if(gamepad1.left_bumper) 2.35 else 1.00 //condensed if else
+        robot.slowDown = if(gamepad1.left_bumper) 2.35 else 1.00 //condensed if else
 
 
         //Tank Drive-sets power equal to numerical value of joystick positions
         leftPower = gamepad1.left_stick_y
         rightPower = gamepad1.right_stick_y
-        robot.fLDrive?.power = leftPower.toDouble() / slowDown
-        robot.bLDrive?.power = leftPower.toDouble() / slowDown
-        robot.fRDrive?.power = rightPower.toDouble() / slowDown
-        robot.bRDrive?.power = rightPower.toDouble() / slowDown
+        robot.fLDrive?.power = leftPower.toDouble() / robot.slowDown
+        robot.bLDrive?.power = leftPower.toDouble() / robot.slowDown
+        robot.fRDrive?.power = rightPower.toDouble() / robot.slowDown
+        robot.bRDrive?.power = rightPower.toDouble() / robot.slowDown
         telemetry.addData("front left: ${robot.fLDrive?.power}, front right: ${robot.fRDrive?.power}, " +
                 "back left: ${robot.bLDrive?.power}, back right: ${robot.bRDrive?.power}", "")
 

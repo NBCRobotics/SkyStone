@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.hardware.*
+import kotlin.math.abs
+import kotlin.math.max
+import org.firstinspires.ftc.robotcore.external.Telemetry
+import org.openftc.revextensions2.RevBulkData
 
 /*
     TODO: Create interfaces that lead to abstract class and seperate auto and tele
@@ -25,6 +29,7 @@ class SSMechRobot {
     var leftHook: Servo? = null
     var touch: DigitalChannel? = null
     val clawPinchPos = 0.40
+    var slowDown = 1.85//default
 
 
     var motF = DcMotorSimple.Direction.FORWARD
@@ -81,17 +86,32 @@ class SSMechRobot {
     }
 
     //METHODS
-
+    /**
+     * Controls the left 2 motors at the same power
+     *
+     * @param pow the power assigned to both motors, flipped due to the joystick readings
+     */
     fun leftPow(pow: Double){
         bLDrive?.power = -pow
         fLDrive?.power = -pow
     }
 
+    /**
+     * Controls the right 2 motors at the same power
+     *
+     * @param pow the power assigned to both motors, flipped due to the joystick readings
+     */
     fun rightPow(pow: Double){
         bRDrive?.power = -pow
         fRDrive?.power = -pow
     }
 
+    /**
+     * Causes the robot to strafe left or right, by having the back left motor and top right motor spin one way,
+     * and the other two spin the other way. Slows down the back motors to compensate for differences in hardware
+     *
+     * @param pow the power assigned to all motors before compensation and flipping the direction
+     */
     fun strafe(pow: Double) //Positive Value = Left Strafe || Negative Value = Right Strafe
     {
         bLDrive?.power = -pow / 1.11
@@ -100,23 +120,78 @@ class SSMechRobot {
         fRDrive?.power = -pow
     }
 
+    /**
+     * Controls all 4 motors with each side having it's own power.
+     * Right side needs compensation due to the unaligned center of mass
+     *
+     * @param leftM the power assigned to the left 2 motors
+     *
+     * @param rightM the power assigned to the right 2 motors
+     */
     fun drive(leftM: Double, rightM: Double) { //used for turning
         leftPow(leftM)
         rightPow(rightM * 1.5)
     }
 
-    fun drive(pow: Double)//OVERLOAD-both motors run at same velocity
+    /**
+     * Overloads the previous method by having both the side set to the same power
+     *
+     * @param pow the power assigned to all motors
+     */
+    fun drive(pow: Double)
     {
         drive(pow, pow)
     }
 
+    fun mechanumPOV(gp: Gamepad) {
+        //POV Mode-left joystick=power(y power and strafing), right joystick=turning
+        // Put powers in the range of -1 to 1 only if they aren't already (not
+        // checking would cause us to always drive at full speed)
 
+        slowDown = gp.left_trigger + 1.0 //Dynamic Slowdown
+        //slowDown = if(gamepad1.left_bumper) 1.75 else 1.00 //condensed if else
+
+        var drive = (gp.left_stick_y).toDouble()
+        var turn = -gp.left_stick_x.toDouble() * 1.5
+        var strafe = -gp.right_stick_x.toDouble()
+        var nor = 0.0
+
+        var frontLeftPower = (drive + turn + strafe)
+        var backLeftPower = (drive - turn + strafe)
+        var frontRightPower = (drive - turn - strafe)
+        var backRightPower = (drive + turn - strafe)
+
+        if (abs(frontLeftPower) > 1 || abs(backLeftPower) > 1 ||
+                abs(frontRightPower) > 1 || abs(backRightPower) > 1) { //normalizing values to [-1.0,1.0]
+            // Find the largest power
+            nor = max(abs(frontLeftPower), abs(backLeftPower))
+            nor = max(abs(frontRightPower), nor)
+            nor = max(abs(backRightPower), nor)
+        }
+        // Divide everything by nor (it's positive so we don't need to worry
+        // about signs)
+        //need to compensate for difference in core hex and 40:1 motors
+        this.fLDrive?.power = (frontLeftPower / slowDown) * 1.05
+        this.bLDrive?.power = (backLeftPower / slowDown) * 1.05 / 1.12
+        this.fRDrive?.power = (frontRightPower / slowDown) * 1.05
+        this.bRDrive?.power = (backRightPower / slowDown) * 1.05 / 1.12
+
+    }
+
+    /**
+     * Sets all the motors' power to zero
+     */
     fun brake() {
         this.drive(0.0)
     }
 
-    fun dropHook(gp: Gamepad) //Controls Foundation Hooks
-    {
+    /**
+     * Controls the foundation hooks. By holding a, the foundation hooks drop to a set position
+     *
+     * @param gp the gamepad used to control the hooks
+     */
+    fun dropHook(gp: Gamepad)
+        {
 /*        var down = false
         var changed = false
 
@@ -144,13 +219,23 @@ class SSMechRobot {
 
     }
 
+    /**
+     * Controls the claw used for grabbing stones by spinning the drive servo and translating the linear gear.
+     * Currently NOT in use.
+     *
+     * @param gp the gamepad used to control the hooks
+     */
     fun clamp(gp: Gamepad) //Controls claw for grabbing stones
     {
         if(gp.a) this.claw?.position = 0.55
         if(gp.b) this.claw?.position = 0.45
     }
 
-
+    /**
+     * Rotates the claw used for grabbing stones. Currently NOT in use.
+     *
+     * @param gp the gamepad used to control the hooks
+     */
     fun pinch(gp: Gamepad) { //Controls claw for grabbing stones
         if(gp.left_bumper) { //hook down
             this.claw?.position = 0.00
