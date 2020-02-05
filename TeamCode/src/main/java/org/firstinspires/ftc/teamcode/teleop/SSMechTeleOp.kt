@@ -15,15 +15,9 @@ class SSMechTeleOp : OpMode() {
     //using robot class for motors, servos etc
     val robot = SSMechRobot()
     val zero = 0.0.toFloat()
-    var tooHigh = true //if v slide is too high
-    var tooLow = true //if v slide is too low
-    var touched = false //if touch sensor is pressed
-    var slideP = 0.5 //h slide postion
-    var linSlidePow: Float = 0.00.toFloat() //v slide power
-    var curPos = 0
     var leftPower: Float = 0.0.toFloat()
     var rightPower: Float = 0.0.toFloat()
-    val max = 10740 //10600
+
     var drive = 0.0
 
 
@@ -33,7 +27,6 @@ class SSMechTeleOp : OpMode() {
         //initializes all parts
         robot.init(hardwareMap)
         robot.vSlide?.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER //Use encoders for linear slide motor
-        curPos = robot.vSlide!!.currentPosition
 
     }
 
@@ -52,54 +45,15 @@ class SSMechTeleOp : OpMode() {
 
         robot.mechanumPOV(gamepad1)
 
-        touched = !robot.touch!!.state //true if not pressed
-
-        //Vertical Slide Power Calculation
-        linSlidePow = gamepad2.right_stick_y //negative for up
-        linSlidePow = when { //when pos is too low and stick is negative, do nothing; same for too high and positive
-            tooLow and (linSlidePow > 0) -> 0.toFloat()
-            tooHigh and (linSlidePow < 0) -> 0.toFloat()
-            else -> gamepad2.right_stick_y
-        }
-        tooHigh = curPos >= max
-        tooLow = curPos < 0
-        //if (curPos > 1500) linSlidePow /= 1.2.toFloat() //slow slide if greater than value
-        robot.vSlide?.power = -linSlidePow.toDouble() / 1//controls vertical slide, flips sign
-        curPos = robot.vSlide!!.currentPosition
-
-        // Horizontal slide calcs
-        slideP = (gamepad2.left_stick_y.toDouble() / 2) + 0.5 // horizontal slide
-        if (touched) { //toggle controls horizontal slide with the left stick of gp2
-            if (slideP > 0.5) robot.hSlide?.position = slideP //1=back; 0=forward
-            else robot.hSlide?.position = 0.5
-        } else robot.hSlide?.position = slideP
 
         robot.pinch(gamepad2) //operates claw
 
         robot.dropHook(gamepad2) //operates hooks
 
+        robot.hSlideControl(gamepad2)
+        robot.vSlideControl(gamepad2)
 
-        if (touched) telemetry.addData("Touch Sensor:", "Activated")
-
-        if (tooHigh) telemetry.addData("Linear Slide Y Error:", "MAX HEIGHT REACHED")
-
-        if (tooLow) telemetry.addData("Linear Slide Y Error:", "MIN HEIGHT REACHED")
-
-        if (gamepad1.left_trigger > 0.0) telemetry.addData("Slowdown:", "Engaged!")
-
-        telemetry.addData("Linear Slide V: $linSlidePow", "") //kotlin string templates
-
-        telemetry.addData("Drive Motors:","front left: ${robot.fLDrive?.power}, front right: ${robot.fRDrive?.power}, " +
-                "back left: ${robot.bLDrive?.power}, back right: ${robot.bRDrive?.power}")
-
-        telemetry.addData("Attachments:", "HSlide = ${robot.hSlide?.position?.toFloat()}, " +
-                "Claw = ${robot.claw?.position?.toFloat()}, " +
-                "VSlide = ${curPos.toFloat()}", "")
-
-        telemetry.addData("Gamepad Stick Vals:","Left Stick= ${gamepad1.left_stick_x}, ${gamepad1.left_stick_y}; " +
-                "Right Stick = ${gamepad1.right_stick_x}, ${gamepad1.right_stick_y}")
-
-        telemetry.addData("Hook: ${robot.leftHook?.position}", "")
+        robot.dumpData(telemetry, gamepad1)
     }
 
     override fun stop() {
