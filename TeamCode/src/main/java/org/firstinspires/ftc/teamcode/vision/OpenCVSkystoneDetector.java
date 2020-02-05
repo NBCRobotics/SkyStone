@@ -101,63 +101,67 @@ public class OpenCVSkystoneDetector extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-        /**
-         *input which is in RGB is the frame the camera gives
-         *We convert the input frame to the color space matYCrCb
-         *Then we store this converted color space in the mat matYCrCb
-         *For all the color spaces go to
-         *https://docs.opencv.org/3.4/d8/d01/group__imgproc__color__conversions.html
-         */
-        Imgproc.cvtColor(input, matYCrCb, Imgproc.COLOR_RGB2YCrCb);
+        try {
+            /**
+             *input which is in RGB is the frame the camera gives
+             *We convert the input frame to the color space matYCrCb
+             *Then we store this converted color space in the mat matYCrCb
+             *For all the color spaces go to
+             *https://docs.opencv.org/3.4/d8/d01/group__imgproc__color__conversions.html
+             */
+            Imgproc.cvtColor(input, matYCrCb, Imgproc.COLOR_RGB2YCrCb);
 
-        for (Rect stone: blocks) {
-            Mat currentMat = new Mat();
-            Core.extractChannel(drawRectangle(matYCrCb, stone, new Scalar (255, 0, 255), 2), currentMat, 2);
-            means.add(Core.mean(currentMat));
-            currentMat.release();
-        }
-
-        Scalar max = means.get(0);
-        int biggestIndex = 0;
-
-        for (Scalar k : means) {
-            if (k.val[0] > max.val[0]) {
-                max = k;
-                biggestIndex = means.indexOf(k);
+            for (Rect stone : blocks) {
+                Mat currentMat = new Mat();
+                Core.extractChannel(drawRectangle(matYCrCb, stone, new Scalar(255, 0, 255), 2), currentMat, 2);
+                means.add(Core.mean(currentMat));
+                currentMat.release();
             }
+
+            Scalar max = means.get(0);
+            int biggestIndex = 0;
+
+            for (Scalar k : means) {
+                if (k.val[0] > max.val[0]) {
+                    max = k;
+                    biggestIndex = means.indexOf(k);
+                }
+            }
+
+            switch (biggestIndex) {
+                case 0:
+                    position = SkystonePosition.LEFT_STONE;
+                    Imgproc.rectangle(input, blocks.get(0), new Scalar(0, 255, 0), 30);
+                    Imgproc.rectangle(input, blocks.get(1), new Scalar(255, 0, 0), 30);
+                    Imgproc.rectangle(input, blocks.get(2), new Scalar(255, 0, 0), 30);
+
+                    break;
+                case 1:
+                    position = SkystonePosition.CENTER_STONE;
+                    Imgproc.rectangle(input, blocks.get(0), new Scalar(255, 0, 0), 30);
+                    Imgproc.rectangle(input, blocks.get(1), new Scalar(0, 255, 0), 30);
+                    Imgproc.rectangle(input, blocks.get(2), new Scalar(255, 0, 0), 30);
+                    break;
+                case 2:
+                    Imgproc.rectangle(input, blocks.get(0), new Scalar(255, 0, 0), 30);
+                    Imgproc.rectangle(input, blocks.get(1), new Scalar(255, 0, 0), 30);
+                    Imgproc.rectangle(input, blocks.get(2), new Scalar(0, 255, 0), 30);
+                    position = SkystonePosition.RIGHT_STONE;
+                    break;
+                default:
+                    position = SkystonePosition.RIGHT_STONE;
+                    Imgproc.rectangle(input, blocks.get(0), new Scalar(255, 0, 0), 30);
+                    Imgproc.rectangle(input, blocks.get(1), new Scalar(255, 0, 0), 30);
+                    Imgproc.rectangle(input, blocks.get(2), new Scalar(255, 0, 0), 30);
+                    // Default go for right stone;
+                    break;
+
+            }
+
+            means.clear();
+        } catch (Exception e) {
+
         }
-
-        switch (biggestIndex) {
-            case 0:
-                position = SkystonePosition.LEFT_STONE;
-                Imgproc.rectangle(input, blocks.get(0), new Scalar(0, 255, 0), 30);
-                Imgproc.rectangle(input, blocks.get(1), new Scalar(255, 0, 0), 30);
-                Imgproc.rectangle(input, blocks.get(2), new Scalar(255, 0, 0), 30);
-
-                break;
-            case 1:
-                position = SkystonePosition.CENTER_STONE;
-                Imgproc.rectangle(input, blocks.get(0), new Scalar(255, 0, 0), 30);
-                Imgproc.rectangle(input, blocks.get(1), new Scalar(0, 255, 0), 30);
-                Imgproc.rectangle(input, blocks.get(2), new Scalar(255, 0, 0), 30);
-                break;
-            case 2:
-                Imgproc.rectangle(input, blocks.get(0), new Scalar(255, 0, 0), 30);
-                Imgproc.rectangle(input, blocks.get(1), new Scalar(255, 0, 0), 30);
-                Imgproc.rectangle(input, blocks.get(2), new Scalar(0, 255, 0), 30);
-                position = SkystonePosition.RIGHT_STONE;
-                break;
-            default:
-                position = SkystonePosition.RIGHT_STONE;
-                Imgproc.rectangle(input, blocks.get(0), new Scalar(255, 0, 0), 30);
-                Imgproc.rectangle(input, blocks.get(1), new Scalar(255, 0, 0), 30);
-                Imgproc.rectangle(input, blocks.get(2), new Scalar(255, 0, 0), 30);
-                // Default go for right stone;
-                break;
-
-        }
-
-        means.clear();
         return input;
     }
 

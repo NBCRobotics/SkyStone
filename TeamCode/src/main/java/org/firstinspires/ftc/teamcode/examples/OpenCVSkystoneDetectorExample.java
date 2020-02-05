@@ -9,7 +9,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@TeleOp
+
+@TeleOp(name="OpenCVExample", group="examples")
 public class OpenCVSkystoneDetectorExample extends LinearOpMode {
 
     private OpenCVSkystoneDetector skystoneDetector;
