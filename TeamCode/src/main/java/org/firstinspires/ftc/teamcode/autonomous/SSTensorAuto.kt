@@ -29,6 +29,7 @@
 package org.firstinspires.ftc.teamcode.autonomous
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
@@ -47,7 +48,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "SSTensorAuto", group = "Autonomous")
+@Autonomous(name = "SSTensorAuto", group = "Autonomous")
 //@Disabled
 class SSTensorAuto : LinearOpMode() {
     /**
