@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.examples;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.vision.OpenCVSkystoneDetector;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -8,6 +9,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
+@TeleOp
 public class OpenCVSkystoneDetectorExample extends LinearOpMode {
 
     private OpenCVSkystoneDetector skystoneDetector;
