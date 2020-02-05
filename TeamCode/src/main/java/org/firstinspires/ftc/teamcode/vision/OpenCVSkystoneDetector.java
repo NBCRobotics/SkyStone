@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.vision;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -11,7 +13,6 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 
 public class OpenCVSkystoneDetector extends OpenCvPipeline {
-
     public enum SkystonePosition {
         LEFT_STONE, CENTER_STONE, RIGHT_STONE
     }
@@ -23,64 +24,41 @@ public class OpenCVSkystoneDetector extends OpenCvPipeline {
     private double firstStonePosition;
     private double secondStonePosition;
     private double thirdStonePosition;
+    private double firstSkystonePercentage;
+    private double percentSpacing;
+    private double stoneWidth, stoneHeight;
+    private boolean defaultValues;
+    private double spacing;
+    private Telemetry tl;
+    volatile SkystonePosition position;
 
-    SkystonePosition position;
 
     ArrayList<Rect> blocks;
 
-    public OpenCVSkystoneDetector(int width, int height) {
-        this(width, height, 25, 25, 50, 50);
+    public OpenCVSkystoneDetector(Telemetry tl) {
+        this.tl = tl;
+        defaultValues = true;
+        blocks = null;
+    }
+    public OpenCVSkystoneDetector() {
+        this(null);
     }
 
-    public OpenCVSkystoneDetector(int width, int height, double firstSkystonePositionPercentage,
-                            double percentSpacing, double stoneWidth, double stoneHeight){
+    public OpenCVSkystoneDetector(double firstSkystonePositionPercentage, double percentSpacing, double stoneWidth, double stoneHeight, Telemetry tl){
+        defaultValues = false;
 
-        double spacing = (percentSpacing * width) / 100;
-        firstStonePosition  = (firstSkystonePositionPercentage / 100) * width;
-        secondStonePosition  = firstStonePosition + spacing;
-        thirdStonePosition  = secondStonePosition + spacing;
-        blocks = new ArrayList<Rect>();
+        this.firstSkystonePercentage = firstSkystonePositionPercentage;
+        this.percentSpacing = percentSpacing;
+        this.stoneWidth = stoneWidth;
+        this.stoneHeight = stoneHeight;
 
-        blocks.add(
-                new Rect(
-                        new Point(
-                                firstStonePosition - (stoneWidth / 2),
-                                0.50 * height - (stoneHeight / 2)
-                        ),
-                        new Point(
-                                firstStonePosition + (stoneWidth / 2),
-                                0.50 * height + (stoneHeight / 2)
-                        )
-                )
-        );
-
-        blocks.add(
-                new Rect(
-                        new Point(
-                                secondStonePosition - (stoneWidth / 2),
-                                0.50 * height - (stoneHeight / 2)
-                        ),
-                        new Point(
-                                secondStonePosition + (stoneWidth / 2),
-                                0.50 * height + (stoneHeight / 2)
-                        )
-                )
-        );
-
-        blocks.add(
-                new Rect(
-                        new Point(
-                                thirdStonePosition - (stoneWidth / 2),
-                                0.50 * height - (stoneHeight / 2)
-                        ),
-                        new Point(
-                                thirdStonePosition + (stoneWidth / 2),
-                                0.50 * height + (stoneHeight / 2)
-                        )
-                )
-        );
+        this.tl = tl;
 
         position = null;
+        blocks = null;
+    }
+    public OpenCVSkystoneDetector(double firstSkystonePositionPercentage, double percentSpacing, double stoneWidth, double stoneHeight){
+        this(firstSkystonePositionPercentage, percentSpacing, stoneWidth, stoneHeight, null);
 
     }
 
@@ -101,6 +79,7 @@ public class OpenCVSkystoneDetector extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+        setValues(input.width(), input.height());
         try {
             /**
              *input which is in RGB is the frame the camera gives
@@ -158,9 +137,16 @@ public class OpenCVSkystoneDetector extends OpenCvPipeline {
 
             }
 
+            if(tl != null) {
+                tl.addData("Skystone Position", position);
+                tl.update();
+            }
             means.clear();
         } catch (Exception e) {
-
+            if(tl != null) {
+                tl.addData("Exception", e);
+                tl.update();
+            }
         }
         return input;
     }
@@ -169,4 +155,32 @@ public class OpenCVSkystoneDetector extends OpenCvPipeline {
         return position;
     }
 
+    /**
+     * Sets the target rectangles only once using input's width and height.
+     * @param width Width of Frame
+     * @param height Height of Frame
+     */
+    private void setValues(double width, double height) {
+        if (blocks == null) {
+            if (defaultValues) {
+                // Set default values
+                firstSkystonePercentage = 25;
+                percentSpacing = 25;
+                stoneHeight = 50;
+                stoneWidth = 50;
+            }
+            spacing = (percentSpacing * width) / 100;
+            firstStonePosition = (firstSkystonePercentage / 100) * width;
+            secondStonePosition = firstStonePosition + spacing;
+            thirdStonePosition = secondStonePosition + spacing;
+            blocks = new ArrayList<Rect>();
+
+            blocks.add(new Rect(new Point(firstStonePosition - (stoneWidth / 2), 0.50 * height - (stoneHeight / 2)),
+                    new Point(firstStonePosition + (stoneWidth / 2), 0.50 * height + (stoneHeight / 2))));
+            blocks.add(new Rect(new Point(secondStonePosition - (stoneWidth / 2), 0.50 * height - (stoneHeight / 2)),
+                    new Point(secondStonePosition + (stoneWidth / 2), 0.50 * height + (stoneHeight / 2))));
+            blocks.add(new Rect(new Point(thirdStonePosition - (stoneWidth / 2), 0.50 * height - (stoneHeight / 2)),
+                    new Point(thirdStonePosition + (stoneWidth / 2), 0.50 * height + (stoneHeight / 2))));
+        }
+    }
 }

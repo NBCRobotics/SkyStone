@@ -44,7 +44,7 @@ public class OpenCVSkystoneDetectorExample extends OpMode {
          * Set the camera to send streamed image through the Skystone Detector vision pipeline and
          * begin streaming images. Image resolution is FRAME_WIDTH x FRAME_HEIGHT pixels.
          */
-        skystoneDetector = new OpenCVSkystoneDetector(FRAME_WIDTH, FRAME_HEIGHT);
+        skystoneDetector = new OpenCVSkystoneDetector(telemetry);
         camera.setPipeline(skystoneDetector);
         camera.startStreaming(FRAME_WIDTH, FRAME_HEIGHT, ROTATION);
 
