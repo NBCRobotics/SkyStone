@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.examples;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.vision.OpenCVSkystoneDetector;
@@ -11,7 +12,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
 @TeleOp(name="OpenCVExample", group="examples")
-public class OpenCVSkystoneDetectorExample extends LinearOpMode {
+public class OpenCVSkystoneDetectorExample extends OpMode {
 
     private OpenCVSkystoneDetector skystoneDetector;
     private OpenCvCamera camera;
@@ -22,8 +23,7 @@ public class OpenCVSkystoneDetectorExample extends LinearOpMode {
     private static final int FRAME_HEIGHT = 240;
 
     @Override
-    public void runOpMode() {
-    while (!isStarted() && !isStopRequested()) {
+    public void init() {
         /*
          * Instantiate an OpenCvCamera object for the camera we'll be using.
          * In this sample, we're using the phone's internal camera. We pass it a
@@ -53,11 +53,15 @@ public class OpenCVSkystoneDetectorExample extends LinearOpMode {
         telemetry.update();
     }
 
-        waitForStart(); // Wait for the user to press Play
+    @Override
+    public void init_loop() {
+        telemetry.addData("Skystone Position: ", skystoneDetector.getSkystonePosition()); // This is the important one!
+        telemetry.update();
+    }
 
-        while (opModeIsActive()) {
-            telemetry.addData("Skystone Position: ", skystoneDetector.getSkystonePosition()); // This is the important one!
-            telemetry.update();
-        }
+    @Override
+    public void loop() {
+        telemetry.addData("Skystone Position: ", skystoneDetector.getSkystonePosition()); // This is the important one!
+        telemetry.update();
     }
 }
