@@ -45,7 +45,7 @@ class SSCVTest : LinearOpMode() {
         camera?.setPipeline(skystoneDetector)
         camera?.startStreaming(FRAME_WIDTH, FRAME_HEIGHT, ROTATION)
 
-        val pos = skystoneDetector?.skystonePosition ?: OpenCVSkystoneDetector.SkystonePosition.LEFT_STONE //Elvis Operator:
+        val pos = skystoneDetector?.skystonePosition ?: OpenCVSkystoneDetector.SkystonePosition.CENTER_STONE //Elvis Operator:
         // returns pos if not null, and left if null
         telemetry.addData("Skystone Position: ", pos) // This is the important one!
         telemetry.update()
