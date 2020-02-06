@@ -83,6 +83,8 @@ class SSMechRobot {
         bLDrive?.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
         bRDrive?.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
         vSlide?.mode = DcMotor.RunMode.RUN_USING_ENCODER //Use encoders for linear slide motor
+        vSlide?.mode = DcMotor.RunMode.RUN_TO_POSITION
+        vSlide?.targetPosition = vSlide!!.currentPosition
     }
 
     //METHODS
