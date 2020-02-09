@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.SSMechRobot
+import kotlin.math.*
 
 /**
  * Created by KasaiYuki on 9/20/2019.
@@ -47,32 +48,42 @@ class SSMechTeleOp : OpMode() {
 
         /**
          * Gamepad1: Tank Drive-Left Stick y=Left Motor; right stick y=Right Motor
-         * Gamepad2: Crane: Right Stick Y = Y Slide; Left Bumper = pinch claw; Left Stick Y= X Slide; a = hook
+         * Gamepad2: Crane: Right Stick Y = Y Slide; Left Bumper = pinch claw; Left Stick Y= X Slide; a = foundation hooks
          */
 
-        robot.mechanumPOV(gamepad1)
+        robot.mechanumPOV(gamepad1) //Drive Power Calculation
 
-        touched = !robot.touch!!.state //true if not pressed
+        touched = !robot.touch!!.state //controls the touch sensor limit switch-true if not pressed
 
-        //Vertical Slide Power Calculation
+        /**
+         * Vertical Slide Power Calculation
+         */
         linSlidePow = gamepad2.right_stick_y //negative for up
-        linSlidePow = when { //when pos is too low and stick is negative, do nothing; same for too high and positive
+        linSlidePow = when {
             tooLow and (linSlidePow > 0) -> 0.toFloat()
             tooHigh and (linSlidePow < 0) -> 0.toFloat()
             else -> gamepad2.right_stick_y
-        }
+        } //when pos is zero or below and stick reads positive, do nothing; same for being at atleast 'max' and negative stick
         tooHigh = curPos >= max
         tooLow = curPos < 0
-        //if (curPos > 1500) linSlidePow /= 1.2.toFloat() //slow slide if greater than value
-        robot.vSlide?.power = -linSlidePow.toDouble() / 1//controls vertical slide, flips sign
+        robot.vSlide?.power = when {
+            linSlidePow < 0 -> (linSlidePow.toDouble().pow(2)) //negative values must become positive-squaring does this
+            linSlidePow > 0 -> -(linSlidePow.toDouble().pow(2)) //positive values must become negative
+            else -> 0.toDouble() //if value is zero or null don't move slide
+        }
+        //controls vertical slide, flips sign and squares
+        //Squaring power gives finer control near 0 and more speed closer to 1/max
+        //Flipped sign as gamepads have opposite signs and squaring a negative would remove this
         curPos = robot.vSlide!!.currentPosition
 
-        // Horizontal slide calcs
-        slideP = (gamepad2.left_stick_y.toDouble() / 2) + 0.5 // horizontal slide
-        if (touched) { //toggle controls horizontal slide with the left stick of gp2
-            if (slideP > 0.5) robot.hSlide?.position = slideP //1=back; 0=forward
-            else robot.hSlide?.position = 0.5
-        } else robot.hSlide?.position = slideP
+        /**
+         *  Horizontal slide Power Calculation
+         */
+        slideP = (gamepad2.left_stick_y.toDouble() / 2) + 0.5 // converts [-1.0,1.0] range to [0, 1.0] where 1=back; 0.5=stop; 0=forward
+        if (touched) { // if the touch sensor is pushed
+            if (slideP > 0.5) robot.hSlide?.position = slideP // and if the left stick is pushed backward, then change nothing
+            else robot.hSlide?.position = 0.5 // and if the left stick is in any other position do nothing
+        } else robot.hSlide?.position = slideP // if the touch sensor is not pushed change nothing
 
         robot.pinch(gamepad2) //operates claw
 
@@ -87,19 +98,17 @@ class SSMechTeleOp : OpMode() {
 
         if (gamepad1.left_trigger > 0.0) telemetry.addData("Slowdown:", "Engaged!")
 
-        telemetry.addData("Linear Slide V: $linSlidePow", "") //kotlin string templates
+        telemetry.addData("Linear Slides", "V: ${robot.vSlide?.power}  ;  H: ${robot.hSlide?.position}") //kotlin string templates
 
         telemetry.addData("Drive Motors:","front left: ${robot.fLDrive?.power}, front right: ${robot.fRDrive?.power}, " +
                 "back left: ${robot.bLDrive?.power}, back right: ${robot.bRDrive?.power}")
 
-        telemetry.addData("Attachments:", "HSlide = ${robot.hSlide?.position?.toFloat()}, " +
-                "Claw = ${robot.claw?.position?.toFloat()}, " +
-                "VSlide = ${curPos.toFloat()}", "")
+        telemetry.addData("Attachments:", "Claw = ${robot.claw?.position?.toFloat()}, " +
+                "VSlide = ${curPos.toFloat()}" +
+                "Hooks: ${robot.leftHook?.position},${robot.rightHook?.position}")
 
-        telemetry.addData("Gamepad Stick Vals:","Left Stick= ${gamepad1.left_stick_x}, ${gamepad1.left_stick_y}; " +
+        telemetry.addData("Gamepad Stick Vals (x,y):","Left Stick= ${gamepad1.left_stick_x}, ${gamepad1.left_stick_y}; " +
                 "Right Stick = ${gamepad1.right_stick_x}, ${gamepad1.right_stick_y}")
-
-        telemetry.addData("Hook: ${robot.leftHook?.position}", "")
     }
 
     override fun stop() {

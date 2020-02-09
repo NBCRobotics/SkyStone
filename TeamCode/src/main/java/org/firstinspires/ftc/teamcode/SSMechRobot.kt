@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.hardware.*
-import kotlin.math.abs
-import kotlin.math.max
+import kotlin.math.*
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.openftc.revextensions2.RevBulkData
 
@@ -185,6 +184,14 @@ class SSMechRobot {
      */
     fun brake() {
         this.drive(0.0)
+    }
+
+    fun stop()
+    {
+        this.brake()
+        this.vSlide?.power = 0.0
+        this.hSlide?.position = 0.5
+
     }
 
     /**
