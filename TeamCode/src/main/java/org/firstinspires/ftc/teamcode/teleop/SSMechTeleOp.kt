@@ -16,15 +16,11 @@ class SSMechTeleOp : OpMode() {
     //using robot class for motors, servos etc
     val robot = SSMechRobot()
     val zero = 0.0.toFloat()
-    var tooHigh = true //if v slide is too high
-    var tooLow = true //if v slide is too low
-    var touched = false //if touch sensor is pressed
-    var slideP = 0.5 //h slide postion
-    var linSlidePow: Float = 0.00.toFloat() //v slide power
-    var curPos = 0
+
+
     var leftPower: Float = 0.0.toFloat()
     var rightPower: Float = 0.0.toFloat()
-    val max = 10740 //10600
+
     var drive = 0.0
 
 
@@ -34,7 +30,6 @@ class SSMechTeleOp : OpMode() {
         //initializes all parts
         robot.init(hardwareMap)
         robot.vSlide?.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER //Use encoders for linear slide motor
-        curPos = robot.vSlide!!.currentPosition
 
     }
 
@@ -52,49 +47,18 @@ class SSMechTeleOp : OpMode() {
          */
 
         robot.mechanumPOV(gamepad1) //Drive Power Calculation
-
-        touched = !robot.touch!!.state //controls the touch sensor limit switch-true if not pressed
-
-        /**
-         * Vertical Slide Power Calculation
-         */
-        linSlidePow = gamepad2.right_stick_y //negative for up
-        linSlidePow = when {
-            tooLow and (linSlidePow > 0) -> 0.toFloat()
-            tooHigh and (linSlidePow < 0) -> 0.toFloat()
-            else -> gamepad2.right_stick_y
-        } //when pos is zero or below and stick reads positive, do nothing; same for being at atleast 'max' and negative stick
-        tooHigh = curPos >= max
-        tooLow = curPos < 0
-        robot.vSlide?.power = when {
-            linSlidePow < 0 -> (linSlidePow.toDouble().pow(2)) //negative values must become positive-squaring does this
-            linSlidePow > 0 -> -(linSlidePow.toDouble().pow(2)) //positive values must become negative
-            else -> 0.toDouble() //if value is zero or null don't move slide
-        }
-        //controls vertical slide, flips sign and squares
-        //Squaring power gives finer control near 0 and more speed closer to 1/max
-        //Flipped sign as gamepads have opposite signs and squaring a negative would remove this
-        curPos = robot.vSlide!!.currentPosition
-
-        /**
-         *  Horizontal slide Power Calculation
-         */
-        slideP = (gamepad2.left_stick_y.toDouble() / 2) + 0.5 // converts [-1.0,1.0] range to [0, 1.0] where 1=back; 0.5=stop; 0=forward
-        if (touched) { // if the touch sensor is pushed
-            if (slideP > 0.5) robot.hSlide?.position = slideP // and if the left stick is pushed backward, then change nothing
-            else robot.hSlide?.position = 0.5 // and if the left stick is in any other position do nothing
-        } else robot.hSlide?.position = slideP // if the touch sensor is not pushed change nothing
-
+        robot.vSlideCalc(gamepad2)
+        robot.hSlideCalc(gamepad2)
         robot.pinch(gamepad2) //operates claw
 
         robot.dropHook(gamepad2) //operates hooks
 
 
-        if (touched) telemetry.addData("Touch Sensor:", "Activated")
+        if (!robot.touch!!.state) telemetry.addData("Touch Sensor:", "Activated")
 
-        if (tooHigh) telemetry.addData("Linear Slide Y Error:", "MAX HEIGHT REACHED")
+        if (robot.tooHigh) telemetry.addData("Linear Slide Y Error:", "MAX HEIGHT REACHED")
 
-        if (tooLow) telemetry.addData("Linear Slide Y Error:", "MIN HEIGHT REACHED")
+        if (robot.tooLow) telemetry.addData("Linear Slide Y Error:", "MIN HEIGHT REACHED")
 
         if (gamepad1.left_trigger > 0.0) telemetry.addData("Slowdown:", "Engaged!")
 
@@ -104,7 +68,7 @@ class SSMechTeleOp : OpMode() {
                 "back left: ${robot.bLDrive?.power}, back right: ${robot.bRDrive?.power}")
 
         telemetry.addData("Attachments:", "Claw = ${robot.claw?.position?.toFloat()}, " +
-                "VSlide = ${curPos.toFloat()}" +
+                "VSlide = ${robot.curPos.toFloat()}" +
                 "Hooks: ${robot.leftHook?.position},${robot.rightHook?.position}")
 
         telemetry.addData("Gamepad Stick Vals (x,y):","Left Stick= ${gamepad1.left_stick_x}, ${gamepad1.left_stick_y}; " +
