@@ -281,18 +281,18 @@ class SSMechRobot {
     /**
      *  Horizontal slide Power Calculation
      */
-    fun hSlideCalc (gp: Gamepad)
+    fun hSlideCalc (gp: Gamepad): Double
     {
         touched = !this.touch!!.state //controls the touch sensor limit switch-true if not pressed
 
         slideP = (gp.left_stick_y.toDouble() / 2) + 0.5 // converts [-1.0,1.0] range to [0, 1.0] where 1=back; 0.5=stop; 0=forward
         if (touched) { // if the touch sensor is pushed
-            if (slideP > 0.5) this.hSlide?.position = slideP // and if the left stick is pushed backward, then change nothing
-            else this.hSlide?.position = 0.5 // and if the left stick is in any other position do nothing
-        } else this.hSlide?.position = slideP // if the touch sensor is not pushed change nothing
+            if (slideP > 0.5) return(slideP) // and if the left stick is pushed backward, then change nothing
+            else return(0.5) // and if the left stick is in any other position do nothing
+        } else return(slideP) // if the touch sensor is not pushed change nothing
     }
 
-    fun vSlideCalc (gp: Gamepad)
+    fun vSlideCalc (gp: Gamepad): Double
     {
         /**
          * Vertical Slide Power Calculation
@@ -305,15 +305,15 @@ class SSMechRobot {
         } //when pos is zero or below and stick reads positive, do nothing; same for being at atleast 'max' and negative stick
         tooHigh = curPos >= max
         tooLow = curPos < 0
-        this.vSlide?.power = when {
-            linSlidePow < 0 -> (linSlidePow.toDouble().pow(2)) //negative values must become positive-squaring does this
-            linSlidePow > 0 -> -(linSlidePow.toDouble().pow(2)) //positive values must become negative
-            else -> 0.toDouble() //if value is zero or null don't move slide
+        curPos = this.vSlide!!.currentPosition
+        when {
+            linSlidePow < 0 -> return((linSlidePow.toDouble().pow(2))) //negative values must become positive-squaring does this
+            linSlidePow > 0 -> return(-(linSlidePow.toDouble().pow(2))) //positive values must become negative
+            else -> return(0.toDouble()) //if value is zero or null don't move slide
         }
         //controls vertical slide, flips sign and squares
         //Squaring power gives finer control near 0 and more speed closer to 1/max
         //Flipped sign as gamepads have opposite signs and squaring a negative would remove this
-        curPos = this.vSlide!!.currentPosition
     }
 }
 
