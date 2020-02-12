@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.examples
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.SSMechRobot
 import org.firstinspires.ftc.teamcode.vision.OpenCVSkystoneDetector
 import org.openftc.easyopencv.OpenCvCamera
@@ -10,8 +11,9 @@ import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
 import org.openftc.easyopencv.OpenCvInternalCamera
 
-@Autonomous(name = "OpenCVExample", group = "examples")
-class SSCVTest : LinearOpMode() {
+@Autonomous(name = "SSCVTest", group = "examples")
+
+class SSCVAuto : LinearOpMode() {
     private var skystoneDetector: OpenCVSkystoneDetector? = null
     private var camera: OpenCvCamera? = null
     val robot = SSMechRobot()
@@ -30,8 +32,15 @@ class SSCVTest : LinearOpMode() {
         telemetry.addData("Status: ", "Autonomous Initialized")
         telemetry.update()
         robot.init(hardwareMap)
-
+        robot.vSlide?.mode = DcMotor.RunMode.RUN_TO_POSITION
+        robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition
         waitForStart()
+
+        robot.leftHook?.position = 0.0
+        robot.rightHook?.position = 0.0
+        //robot.vSlide?.targetPosition = 50 + robot.vSlide!!.currentPosition
+        robot.vSlide?.power = 1.0
+
         val cameraMonitorViewId = hardwareMap.appContext.resources.getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.packageName)
         // Comment the below line and uncomment the next line to prevent sending camera view to the monitor
         camera = OpenCvCameraFactory.getInstance().createInternalCamera(CAMERA_DIRECTION, cameraMonitorViewId)
@@ -83,7 +92,50 @@ class SSCVTest : LinearOpMode() {
 
     fun skyCenter()
     {
-
+        robot.rightPow(0.5)
+        sleep(500)
+        robot.pause()
+        robot.drive(-0.75)
+        sleep(500)
+        robot.pause()
+        robot.drive(0.50) //Drives Forward to the Stones
+        sleep(1700)
+        robot.pause()
+        robot.claw?.position = 0.0
+        robot.pause()
+        sleep(500)
+        robot.drive(-0.50)
+        sleep(750)
+        robot.pause()
+        robot.strafe(1.0)//Heads to Foundation
+        sleep(4000)
+        robot.pause()
+        robot.vSlide?.targetPosition = 2500 + robot.vSlide!!.currentPosition
+        sleep(750)
+        robot.hSlide?.position = 0.3
+        sleep(550)
+        robot.hSlide?.position = 0.5
+        robot.drive(0.5)
+        sleep(900)
+        robot.pause()
+        robot.claw?.position = robot.clawPinchPos
+        robot.pause()
+        robot.drive(-0.5)
+        sleep(1200)
+        robot.pause()
+        robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition - 2500
+        sleep(750)
+        robot.pause()
+        robot.hSlide?.position = 0.7
+        sleep(550)
+        robot.pause()
+        robot.strafe(-0.5)
+        sleep(2100)
+        robot.claw?.position = 0.0
+        robot.pause()
+        robot.strafe(-0.5)
+        sleep(2400)
+        robot.pause()
     }
 
     fun skyRight()

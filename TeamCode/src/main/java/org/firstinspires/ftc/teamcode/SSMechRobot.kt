@@ -22,6 +22,7 @@ class SSMechRobot {
     var fLDrive: DcMotor? = null
     var fRDrive: DcMotor? = null
     var vSlide: DcMotor? = null
+    var tapeMeasure: DcMotor? = null
     var hSlide: Servo? = null
     var claw: Servo? = null
     var rightHook: Servo? = null
@@ -63,6 +64,7 @@ class SSMechRobot {
         fLDrive = ahwdMap.dcMotor.get("fLDrive")
         fRDrive = ahwdMap.dcMotor.get("fRDrive")
         vSlide = ahwdMap.dcMotor.get("vSlide")
+        tapeMeasure = ahwdMap.dcMotor.get("tapeMeasure")
         hSlide = ahwdMap.servo.get("hSlide")
         claw = ahwdMap.servo.get("claw")
         leftHook = ahwdMap.servo.get("leftHook")
@@ -79,6 +81,7 @@ class SSMechRobot {
         claw?.direction = serF
         rightHook?.direction = serR
         leftHook?.direction = serF
+        tapeMeasure?.direction = motF
 
 
         bLDrive?.power = 0.0
@@ -201,6 +204,15 @@ class SSMechRobot {
 
     }
 
+    fun nyoomPark(gp: Gamepad)
+    {
+        when {
+            gp.left_trigger > 0 -> this.tapeMeasure?.power = -1.0
+            gp.right_trigger > 0 -> this.tapeMeasure?.power = 1.0
+            else -> this.tapeMeasure?.power = 0.0
+        }
+    }
+
     /**
      * Controls the foundation hooks. By holding a, the foundation hooks drop to a set position
      *
@@ -245,6 +257,12 @@ class SSMechRobot {
     {
         if(gp.a) this.claw?.position = 0.55
         if(gp.b) this.claw?.position = 0.45
+    }
+
+    fun pause()
+    {
+        this.brake()
+        Thread.sleep(400)
     }
 
     /**
