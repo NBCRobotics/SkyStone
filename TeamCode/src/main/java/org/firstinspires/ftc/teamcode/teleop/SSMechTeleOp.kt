@@ -51,6 +51,7 @@ class SSMechTeleOp : OpMode() {
         robot.hSlide?.position = robot.hSlideCalc(gamepad2)
         robot.pinch(gamepad2) //operates claw
         robot.dropHook(gamepad2) //operates hooks
+        robot.nyoomPark(gamepad2) //operates the tape measure
 
 
         if (!robot.touch!!.state) telemetry.addData("Touch Sensor:", "Activated")

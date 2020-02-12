@@ -102,7 +102,7 @@ class SSMechRobot {
      *
      * @param pow the power assigned to both motors, flipped due to the joystick readings
      */
-    fun leftPow(pow: Double){
+    fun leftPow(pow: Double) {
         bLDrive?.power = -pow
         fLDrive?.power = -pow
     }
@@ -112,7 +112,7 @@ class SSMechRobot {
      *
      * @param pow the power assigned to both motors, flipped due to the joystick readings
      */
-    fun rightPow(pow: Double){
+    fun rightPow(pow: Double) {
         bRDrive?.power = -pow
         fRDrive?.power = -pow
     }
@@ -149,8 +149,7 @@ class SSMechRobot {
      *
      * @param pow the power assigned to all motors
      */
-    fun drive(pow: Double)
-    {
+    fun drive(pow: Double) {
         drive(pow, pow)
     }
 
@@ -196,16 +195,14 @@ class SSMechRobot {
         this.drive(0.0)
     }
 
-    fun stop()
-    {
+    fun stop() {
         this.brake()
         this.vSlide?.power = 0.0
         this.hSlide?.position = 0.5
 
     }
 
-    fun nyoomPark(gp: Gamepad)
-    {
+    fun nyoomPark(gp: Gamepad) {
         when {
             gp.left_trigger > 0 -> this.tapeMeasure?.power = -1.0
             gp.right_trigger > 0 -> this.tapeMeasure?.power = 1.0
@@ -218,8 +215,7 @@ class SSMechRobot {
      *
      * @param gp the gamepad used to control the hooks
      */
-    fun dropHook(gp: Gamepad)
-        {
+    fun dropHook(gp: Gamepad) {
 /*        var down = false
         var changed = false
 
@@ -236,11 +232,10 @@ class SSMechRobot {
             this.leftHook?.position = 0.7
             this.rightHook?.position = 0.7
         }*/
-        if(gp.a) { //hook down
+        if (gp.a) { //hook down
             this.leftHook?.position = 0.7
             this.rightHook?.position = 0.72
-        }
-        else { //default position
+        } else { //default position
             this.leftHook?.position = 0.18
             this.rightHook?.position = 0.21
         }
@@ -255,12 +250,11 @@ class SSMechRobot {
      */
     fun clamp(gp: Gamepad) //Controls claw for grabbing stones
     {
-        if(gp.a) this.claw?.position = 0.55
-        if(gp.b) this.claw?.position = 0.45
+        if (gp.a) this.claw?.position = 0.55
+        if (gp.b) this.claw?.position = 0.45
     }
 
-    fun pause()
-    {
+    fun pause() {
         this.brake()
         Thread.sleep(400)
     }
@@ -271,10 +265,9 @@ class SSMechRobot {
      * @param gp the gamepad used to control the hooks
      */
     fun pinch(gp: Gamepad) { //Controls claw for grabbing stones
-        if(gp.left_bumper) { //hook down
+        if (gp.left_bumper) { //hook down
             this.claw?.position = 0.00
-        }
-        else { //default position
+        } else { //default position
             this.claw?.position = clawPinchPos
         }
         /*
@@ -299,19 +292,17 @@ class SSMechRobot {
     /**
      *  Horizontal slide Power Calculation
      */
-    fun hSlideCalc (gp: Gamepad): Double
-    {
+    fun hSlideCalc(gp: Gamepad): Double {
         touched = !this.touch!!.state //controls the touch sensor limit switch-true if not pressed
 
         slideP = (gp.left_stick_y.toDouble() / 2) + 0.5 // converts [-1.0,1.0] range to [0, 1.0] where 1=back; 0.5=stop; 0=forward
         if (touched) { // if the touch sensor is pushed
-            if (slideP > 0.5) return(slideP) // and if the left stick is pushed backward, then change nothing
-            else return(0.5) // and if the left stick is in any other position do nothing
-        } else return(slideP) // if the touch sensor is not pushed change nothing
+            if (slideP > 0.5) return (slideP) // and if the left stick is pushed backward, then change nothing
+            else return (0.5) // and if the left stick is in any other position do nothing
+        } else return (slideP) // if the touch sensor is not pushed change nothing
     }
 
-    fun vSlideCalc (gp: Gamepad): Double
-    {
+    fun vSlideCalc(gp: Gamepad): Double {
         /**
          * Vertical Slide Power Calculation
          */
@@ -325,9 +316,9 @@ class SSMechRobot {
         tooLow = curPos < 0
         curPos = this.vSlide!!.currentPosition
         when {
-            linSlidePow < 0 -> return((linSlidePow.toDouble().pow(2))) //negative values must become positive-squaring does this
-            linSlidePow > 0 -> return(-(linSlidePow.toDouble().pow(2))) //positive values must become negative
-            else -> return(0.toDouble()) //if value is zero or null don't move slide
+            linSlidePow < 0 -> return ((linSlidePow.toDouble().pow(2))) //negative values must become positive-squaring does this
+            linSlidePow > 0 -> return (-(linSlidePow.toDouble().pow(2))) //positive values must become negative
+            else -> return (0.toDouble()) //if value is zero or null don't move slide
         }
         //controls vertical slide, flips sign and squares
         //Squaring power gives finer control near 0 and more speed closer to 1/max

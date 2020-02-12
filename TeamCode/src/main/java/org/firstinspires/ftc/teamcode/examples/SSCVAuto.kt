@@ -11,7 +11,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
 import org.openftc.easyopencv.OpenCvInternalCamera
 
-@Autonomous(name = "SSCVTest", group = "examples")
+@Autonomous(name = "SSCVAuto", group = "examples")
 
 class SSCVAuto : LinearOpMode() {
     private var skystoneDetector: OpenCVSkystoneDetector? = null
@@ -34,6 +34,12 @@ class SSCVAuto : LinearOpMode() {
         robot.init(hardwareMap)
         robot.vSlide?.mode = DcMotor.RunMode.RUN_TO_POSITION
         robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition
+        val cameraMonitorViewId = hardwareMap.appContext.resources.getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.packageName)
+        // Comment the below line and uncomment the next line to prevent sending camera view to the monitor
+        camera = OpenCvCameraFactory.getInstance().createInternalCamera(CAMERA_DIRECTION, cameraMonitorViewId)
+        // camera = OpenCvCameraFactory.getInstance().createInternalCamera(CAMERA_DIRECTION);
+        camera?.openCameraDevice() // Open a connection to the camera
+
         waitForStart()
 
         robot.leftHook?.position = 0.0
@@ -41,11 +47,6 @@ class SSCVAuto : LinearOpMode() {
         //robot.vSlide?.targetPosition = 50 + robot.vSlide!!.currentPosition
         robot.vSlide?.power = 1.0
 
-        val cameraMonitorViewId = hardwareMap.appContext.resources.getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.packageName)
-        // Comment the below line and uncomment the next line to prevent sending camera view to the monitor
-        camera = OpenCvCameraFactory.getInstance().createInternalCamera(CAMERA_DIRECTION, cameraMonitorViewId)
-        // camera = OpenCvCameraFactory.getInstance().createInternalCamera(CAMERA_DIRECTION);
-        camera?.openCameraDevice() // Open a connection to the camera
         /*
          * Set the camera to send streamed image through the Skystone Detector vision pipeline and
          * begin streaming images. Image resolution is FRAME_WIDTH x FRAME_HEIGHT pixels.
@@ -92,8 +93,9 @@ class SSCVAuto : LinearOpMode() {
 
     fun skyCenter()
     {
-        robot.rightPow(0.5)
-        sleep(500)
+        camera?.closeCameraDevice()
+        robot.drive(-0.75,0.75)
+        sleep(800)
         robot.pause()
         robot.drive(-0.75)
         sleep(500)
