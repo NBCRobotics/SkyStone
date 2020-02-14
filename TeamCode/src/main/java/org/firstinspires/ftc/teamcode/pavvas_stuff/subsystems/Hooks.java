@@ -47,7 +47,7 @@ public class Hooks implements Subsystem {
 
     @Override
     public void periodic() {
-        leftHook.setPosition(this.state.position);
-        rightHook.setPosition(this.state.position);
+        leftHook.setPosition(this.state.getPosition());
+        rightHook.setPosition(this.state.getPosition());
     }
 }
