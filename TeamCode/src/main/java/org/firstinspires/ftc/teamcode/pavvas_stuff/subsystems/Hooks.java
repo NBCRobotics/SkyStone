@@ -11,17 +11,40 @@ public class Hooks implements Subsystem {
     private Servo leftHook;
     private Servo rightHook;
 
+    private HooksState state = HooksState.UP;
+
     public Hooks(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
     }
 
+    public enum HooksState {
+        UP(0.2),
+        DOWN(0.7);
+
+        private final double position;
+
+        private HooksState(double position) {
+            this.position = position;
+        }
+
+        public double getPosition() {
+            return this.position;
+        }
+    }
+
+    public void setState(HooksState state) {
+        this.state = state;
+    }
+
     @Override
     public void initHardware() {
-
+        this.leftHook = hardwareMap.get(Servo.class, "leftHook");
+        this.rightHook = hardwareMap.get(Servo.class, "rightHook");
     }
 
     @Override
     public void periodic() {
-
+        leftHook.setPosition(this.state.position);
+        rightHook.setPosition(this.state.position);
     }
 }
