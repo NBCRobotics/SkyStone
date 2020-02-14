@@ -40,6 +40,9 @@ public class Hooks implements Subsystem {
     public void initHardware() {
         this.leftHook = hardwareMap.get(Servo.class, "leftHook");
         this.rightHook = hardwareMap.get(Servo.class, "rightHook");
+
+        this.leftHook.setDirection(Servo.Direction.FORWARD);
+        this.rightHook.setDirection(Servo.Direction.REVERSE);
     }
 
     @Override
