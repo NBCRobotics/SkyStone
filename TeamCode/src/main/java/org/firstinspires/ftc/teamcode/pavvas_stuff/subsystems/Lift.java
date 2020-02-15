@@ -21,7 +21,7 @@ public class Lift implements Subsystem {
     private DigitalChannel touch;
 
     private double liftMotorPower = 0.0;
-    private double horizontalSlidePosition = 0.0;
+    private double horizontalSlidePower = 0.0;
 
     private static final int LIFT_MAX_HEIGHT = 10740;
 
@@ -63,19 +63,19 @@ public class Lift implements Subsystem {
     @Override
     public void periodic() {
         liftMotor.setPower(this.liftMotorPower);
-        horizontalSlide.setPosition(this.horizontalSlidePosition);
+        horizontalSlide.setPosition(this.horizontalSlidePower);
         claw.setPosition(this.clawState.getPosition());
     }
 
-    public void setHorizontalSlidePosition(double input) {
+    public void setHorizontalSlidePower(double input) {
         boolean touched = !touch.getState();
         input /= 2;
         input += 0.5;
 
         if (touched) {
-            this.horizontalSlidePosition = (input > 0.5) ? input : 0.5;
+            this.horizontalSlidePower = (input > 0.5) ? input : 0.5;
         } else {
-            this.horizontalSlidePosition = input;
+            this.horizontalSlidePower = input;
         }
     }
 

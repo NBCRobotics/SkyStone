@@ -13,8 +13,6 @@ public class TeleOpDrive implements Command {
     private Drive drive;
     private Gamepad gamepad;
 
-    private double slowDown = 1.85;
-
     public TeleOpDrive(Drive drive, Gamepad gamepad) {
         this.drive = drive;
         this.gamepad = gamepad;
@@ -27,7 +25,7 @@ public class TeleOpDrive implements Command {
 
     @Override
     public void periodic() {
-        this.slowDown = this.gamepad.left_trigger + 1.0;
+        double slowDown = this.gamepad.left_trigger + 1.0;
 
         double dy = gamepad.left_stick_y;
         double dtheta = -gamepad.left_stick_x * 1.5;
@@ -57,12 +55,12 @@ public class TeleOpDrive implements Command {
         frontRightPower /= slowDown;
         backRightPower /= slowDown;
 
-        drive.setPower(backLeftPower, backRightPower, frontLeftPower, frontRightPower);
+        this.drive.setPower(backLeftPower, backRightPower, frontLeftPower, frontRightPower);
     }
 
     @Override
     public void stop() {
-        drive.setPower(0.0, 0.0, 0.0, 0.0);
+        this.drive.setPower(0.0, 0.0, 0.0, 0.0);
     }
 
     @Override
