@@ -18,10 +18,10 @@ public class Drive implements Subsystem {
     private DcMotorEx frontLeftMotor;
     private DcMotorEx frontRightMotor;
 
-    private double backLeftPower;
-    private double backRightPower;
-    private double frontLeftPower;
-    private double frontRightPower;
+    private double backLeftPower = 0.0;
+    private double backRightPower = 0.0;
+    private double frontLeftPower = 0.0;
+    private double frontRightPower = 0.0;
 
     public Drive(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
