@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pavvas_stuff.commands;
+package org.firstinspires.ftc.teamcode.pavvas_stuff.commands.teleop;
 
 import com.disnodeteam.dogecommander.Command;
 import com.qualcomm.robotcore.hardware.Gamepad;

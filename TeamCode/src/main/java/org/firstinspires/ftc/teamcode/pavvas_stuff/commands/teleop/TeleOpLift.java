@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pavvas_stuff.commands;
+package org.firstinspires.ftc.teamcode.pavvas_stuff.commands.teleop;
 
 import com.disnodeteam.dogecommander.Command;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -24,12 +24,20 @@ public class TeleOpLift implements Command {
 
     @Override
     public void periodic() {
+        if (this.gamepad.left_bumper) {
+            this.lift.setClawState(Lift.ClawState.CLOSED);
+        } else {
+            this.lift.setClawState(Lift.ClawState.OPEN);
+        }
 
+        this.lift.setHorizontalSlidePower(gamepad.left_stick_y);
+        this.lift.setLiftMotorPower(gamepad.right_stick_y);
     }
 
     @Override
     public void stop() {
-
+        this.lift.setHorizontalSlidePower(0.0);
+        this.lift.setLiftMotorPower(0.0);
     }
 
     @Override
