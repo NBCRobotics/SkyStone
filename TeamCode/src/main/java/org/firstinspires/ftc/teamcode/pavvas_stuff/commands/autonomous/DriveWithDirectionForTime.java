@@ -14,6 +14,14 @@ public class DriveWithDirectionForTime implements Command {
     private double seconds;
     private double backLeftPower, backRightPower, frontLeftPower, frontRightPower;
 
+    /**
+     *
+     * @param drive The drivebase to move. This should come from a field in the OpMode.
+     * @param direction Direction in which to move the robot. See {@link Direction Direction} for possible directions
+     * @param seconds Amount of time in seconds to run this Command for
+     * @param power Power value to set the motors to. Range [0, 1]. This Command will take care of
+     *              setting the appropriate directions.
+     */
     public DriveWithDirectionForTime(Drive drive, Direction direction, double seconds, double power) {
         this.timer = new ElapsedTime();
 
