@@ -17,7 +17,7 @@ public class TeleOpHooks implements Command {
 
     @Override
     public void start() {
-        this.hooks.setState(Hooks.HooksState.UP)
+        this.hooks.setState(Hooks.HooksState.UP);
     }
 
     @Override
