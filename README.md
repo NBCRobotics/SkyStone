@@ -1,5 +1,8 @@
 ![Android CI](https://github.com/NBCRobotics/SkyStone/workflows/Android%20CI/badge.svg?branch=master)
 
+
+Team 5387's Robot Controller Code for the 2019-2020 FIRST Tech Challenge SKYSTONE competition season.
+
 ## NOTICE
 
 This repository contains the public FTC SDK for the SKYSTONE (2019-2020) competition season.  
