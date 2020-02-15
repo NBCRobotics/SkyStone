@@ -23,7 +23,10 @@ public class Lift implements Subsystem {
     private double liftMotorPower = 0.0;
     private double horizontalSlidePower = 0.0;
 
+    private DcMotor.RunMode runMode = DcMotor.RunMode.RUN_USING_ENCODER;
+
     private static final int LIFT_MAX_HEIGHT = 10740;
+    private int position = 0;
 
     public Lift(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
@@ -55,6 +58,9 @@ public class Lift implements Subsystem {
         this.horizontalSlide = hardwareMap.get(Servo.class, "hSlide");
         this.touch = hardwareMap.get(DigitalChannel.class, "touch");
 
+        this.liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         this.liftMotor.setDirection(DcMotor.Direction.REVERSE);
         this.claw.setDirection(Servo.Direction.FORWARD);
         this.horizontalSlide.setDirection(Servo.Direction.REVERSE);
@@ -62,11 +68,21 @@ public class Lift implements Subsystem {
 
     @Override
     public void periodic() {
-        liftMotor.setPower(this.liftMotorPower);
-        horizontalSlide.setPosition(this.horizontalSlidePower);
-        claw.setPosition(this.clawState.getPosition());
+        this.liftMotor.setMode(runMode);
+
+        if (runMode == DcMotor.RunMode.RUN_USING_ENCODER) {
+            this.liftMotor.setPower(this.liftMotorPower);
+        } else if (runMode == DcMotor.RunMode.RUN_TO_POSITION) {
+            this.liftMotor.setTargetPosition(position);
+        }
+        this.horizontalSlide.setPosition(this.horizontalSlidePower);
+        this.claw.setPosition(this.clawState.getPosition());
     }
 
+    /**
+     *
+     * @param input Range [0.0, 1.0]. 0.5 means no motion. 0.0 means forward. 1.0 means back
+     */
     public void setHorizontalSlidePower(double input) {
         boolean touched = !touch.getState();
         input /= 2;
@@ -80,6 +96,7 @@ public class Lift implements Subsystem {
     }
 
     public void setLiftMotorPower(double input) {
+        this.runMode = DcMotor.RunMode.RUN_USING_ENCODER;
         input *= -1;
         boolean tooLow = this.liftMotor.getCurrentPosition() < 0;
         boolean tooHigh = this.liftMotor.getCurrentPosition() >= LIFT_MAX_HEIGHT;
@@ -93,5 +110,14 @@ public class Lift implements Subsystem {
             this.liftMotorPower = input;
         }
 
+    }
+
+    public void setLiftMotorPosition(int position) {
+        this.runMode = DcMotor.RunMode.RUN_TO_POSITION;
+        this.position = position;
+    }
+
+    public int getLiftMotorPosition() {
+        return this.liftMotor.getCurrentPosition();
     }
 }

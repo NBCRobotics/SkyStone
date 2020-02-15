@@ -15,7 +15,7 @@ public class DriveWithDirectionForTime implements Command {
     private double backLeftPower, backRightPower, frontLeftPower, frontRightPower;
 
     /**
-     *
+     * An autonomous command to drive, turn, or strafe in a certain direction.
      * @param drive The drivebase to move. This should come from a field in the OpMode.
      * @param direction Direction in which to move the robot. See {@link Direction Direction} for possible directions
      * @param seconds Amount of time in seconds to run this Command for
@@ -30,6 +30,7 @@ public class DriveWithDirectionForTime implements Command {
         this.seconds = seconds;
 
         switch (this.direction) {
+            default:
             case FORWARD:
                 this.backLeftPower = power;
                 this.backRightPower = power;

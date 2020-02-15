@@ -36,6 +36,10 @@ public class Hooks implements Subsystem {
         this.state = state;
     }
 
+    public HooksState getState() {
+        return this.state;
+    }
+
     @Override
     public void initHardware() {
         this.leftHook = hardwareMap.get(Servo.class, "leftHook");
