@@ -120,4 +120,8 @@ public class Lift implements Subsystem {
     public int getLiftMotorPosition() {
         return this.liftMotor.getCurrentPosition();
     }
+
+    public ClawState getClawState() {
+        return this.clawState;
+    }
 }
