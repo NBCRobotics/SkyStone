@@ -120,9 +120,9 @@ class SSCVAuto : LinearOpMode() {
         robot.drive(0.5)
         sleep(900)
         robot.pause()
-        robot.claw?.position = robot.clawPinchPos
+        robot.claw?.position = robot.clawPinchPos //drops stone
         robot.pause()
-        robot.drive(-0.5)
+        /*robot.drive(-0.5)
         sleep(1200)
         robot.pause()
         robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition - 2500
@@ -131,17 +131,38 @@ class SSCVAuto : LinearOpMode() {
         robot.hSlide?.position = 0.7
         sleep(550)
         robot.pause()
-        robot.strafe(-0.5)
+        robot.strafe(-0.5) //heads towards alliance bridge
         sleep(2100)
         robot.claw?.position = 0.0
         robot.pause()
         robot.strafe(-0.5)
         sleep(2400)
-        robot.pause()
+        robot.pause()*/
+        moveFoundation()
     }
 
     fun skyRight()
     {
 
+    }
+
+    fun moveFoundation()
+    {
+        robot.strafe(-0.5)
+        sleep(500)
+        robot.hookDown()
+        robot.drive(-0.75, 0.75)
+        sleep(1000)
+        robot.drive(1.0)
+        sleep(1000)
+        robot.hookUp()
+        park()
+    }
+
+    fun park()
+    {
+        robot.drive(-0.75)
+        sleep(1500)
+        //TODO: use light sensor
     }
 }

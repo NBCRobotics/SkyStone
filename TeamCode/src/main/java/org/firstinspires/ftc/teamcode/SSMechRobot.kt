@@ -210,6 +210,18 @@ class SSMechRobot {
         }
     }
 
+    fun hookDown()
+    {
+        this.leftHook?.position = 0.7
+        this.rightHook?.position = 0.72
+    }
+
+    fun hookUp()
+    {
+        this.leftHook?.position = 0.18
+        this.rightHook?.position = 0.21
+    }
+
     /**
      * Controls the foundation hooks. By holding a, the foundation hooks drop to a set position
      *
@@ -233,11 +245,9 @@ class SSMechRobot {
             this.rightHook?.position = 0.7
         }*/
         if (gp.a) { //hook down
-            this.leftHook?.position = 0.7
-            this.rightHook?.position = 0.72
+            hookDown()
         } else { //default position
-            this.leftHook?.position = 0.18
-            this.rightHook?.position = 0.21
+            hookUp()
         }
 
     }
