@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.disnodeteam.dogecommander.DogeOpMode;
 
 import org.firstinspires.ftc.teamcode.pavvas_stuff.commands.autonomous.DriveWithDirectionForTime;
+import org.firstinspires.ftc.teamcode.pavvas_stuff.commands.autonomous.RunHorizontalSlideForTime;
+import org.firstinspires.ftc.teamcode.pavvas_stuff.commands.autonomous.RunLiftToPosition;
+import org.firstinspires.ftc.teamcode.pavvas_stuff.commands.autonomous.SetClaw;
 import org.firstinspires.ftc.teamcode.pavvas_stuff.commands.teleop.TeleOpDrive;
 import org.firstinspires.ftc.teamcode.pavvas_stuff.commands.teleop.TeleOpHooks;
 import org.firstinspires.ftc.teamcode.pavvas_stuff.commands.teleop.TeleOpLift;
@@ -35,12 +38,15 @@ public class CommanderAutoTest extends LinearOpMode implements DogeOpMode {
 
         waitForStart();
 
-        // Drive forward for 2 seconds at full power, then drive backwards to the left for 1 second
-        // at half power, then turn right for 3 seconds at full power
         commander.runCommand(new DriveWithDirectionForTime(drive, DriveWithDirectionForTime.Direction.FORWARD, 2, 1));
         commander.runCommand(new DriveWithDirectionForTime(drive, DriveWithDirectionForTime.Direction.DIAGONAL_LEFT_BACKWARD, 1, 0.5));
         commander.runCommand(new DriveWithDirectionForTime(drive, DriveWithDirectionForTime.Direction.TURN_RIGHT, 3, 1));
 
+        commander.runCommandsParallel(
+                new RunLiftToPosition(lift, 5000),
+                new RunHorizontalSlideForTime(lift, RunHorizontalSlideForTime.Direction.OUT, 2),
+                new SetClaw(lift, Lift.ClawState.CLOSED)
+        );
         commander.stop();
     }
 }
