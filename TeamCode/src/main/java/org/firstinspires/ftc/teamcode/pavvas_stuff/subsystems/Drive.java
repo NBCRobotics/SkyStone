@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.pavvas_stuff.subsystems;
 
+import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.disnodeteam.dogecommander.Subsystem;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -18,6 +19,8 @@ public class Drive implements Subsystem {
     private DcMotorEx frontLeftMotor;
     private DcMotorEx frontRightMotor;
 
+    private RevIMU imu;
+
     private double backLeftPower = 0.0;
     private double backRightPower = 0.0;
     private double frontLeftPower = 0.0;
@@ -25,6 +28,7 @@ public class Drive implements Subsystem {
 
     public Drive(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
+        this.imu.reset();
     }
 
     public void setPower(double backLeftPower, double backRightPower, double frontLeftPower, double frontRightPower) {
@@ -32,6 +36,10 @@ public class Drive implements Subsystem {
         this.backRightPower = backRightPower;
         this.frontLeftPower = frontLeftPower;
         this.frontRightPower = frontRightPower;
+    }
+
+    public double getHeading() {
+        return this.imu.getHeading();
     }
 
     @Override
@@ -45,6 +53,8 @@ public class Drive implements Subsystem {
         this.backRightMotor.setDirection(DcMotor.Direction.REVERSE);
         this.frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         this.frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        this.imu = new RevIMU(this.hardwareMap, "imu");
     }
 
     @Override
