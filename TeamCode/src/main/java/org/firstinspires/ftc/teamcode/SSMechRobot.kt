@@ -31,7 +31,7 @@ class SSMechRobot {
     val clawPinchPos = 0.40
     var slowDown = 1.85//default
     var slideP = 0.5 //h slide postion
-    val max = 10740 //10600
+    val max = 5800
     var linSlidePow: Float = 0.00.toFloat() //v slide power
     var tooHigh = true //if v slide is too high
     var tooLow = true //if v slide is too low
@@ -141,7 +141,7 @@ class SSMechRobot {
      */
     fun drive(leftM: Double, rightM: Double) { //used for turning
         leftPow(leftM)
-        rightPow(rightM * 1.5)
+        rightPow(rightM) // * 1.5)
     }
 
     /**
@@ -266,7 +266,7 @@ class SSMechRobot {
 
     fun pause() {
         this.brake()
-        Thread.sleep(400)
+        Thread.sleep(500)
     }
 
     /**

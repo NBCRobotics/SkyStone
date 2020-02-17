@@ -64,11 +64,13 @@ class SSMechTeleOp : OpMode() {
 
         telemetry.addData("Linear Slides", "V: ${robot.vSlide?.power}  ;  H: ${robot.hSlide?.position}") //kotlin string templates
 
+        telemetry.addData("Vertical Linear Slide Encoder Position,", robot.curPos)
+
         telemetry.addData("Drive Motors:","front left: ${robot.fLDrive?.power}, front right: ${robot.fRDrive?.power}, " +
                 "back left: ${robot.bLDrive?.power}, back right: ${robot.bRDrive?.power}")
 
         telemetry.addData("Attachments:", "Claw = ${robot.claw?.position?.toFloat()}, " +
-                "VSlide = ${robot.curPos.toFloat()}" +
+                "Tape Measure = ${robot.tapeMeasure?.power}" +
                 "Hooks: ${robot.leftHook?.position},${robot.rightHook?.position}")
 
         telemetry.addData("Gamepad Stick Vals (x,y):","Left Stick= ${gamepad1.left_stick_x}, ${gamepad1.left_stick_y}; " +

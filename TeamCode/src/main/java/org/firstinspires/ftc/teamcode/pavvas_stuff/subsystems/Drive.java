@@ -28,7 +28,6 @@ public class Drive implements Subsystem {
 
     public Drive(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
-        this.imu.reset();
     }
 
     public void setPower(double backLeftPower, double backRightPower, double frontLeftPower, double frontRightPower) {
