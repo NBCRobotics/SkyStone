@@ -33,8 +33,8 @@ public class Lift implements Subsystem {
     }
 
     public enum ClawState {
-        OPEN(0.4),
-        CLOSED(0.0);
+        OPEN(0.0),
+        CLOSED(0.4);
 
         private double position;
 

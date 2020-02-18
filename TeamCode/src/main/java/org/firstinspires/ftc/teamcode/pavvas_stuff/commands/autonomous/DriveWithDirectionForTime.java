@@ -110,12 +110,11 @@ public class DriveWithDirectionForTime implements Command {
     @Override
     public void start() {
         this.timer.reset();
-        this.drive.setPower(backLeftPower, backRightPower, frontLeftPower, frontRightPower);
     }
 
     @Override
     public void periodic() {
-
+        this.drive.setPower(backLeftPower, backRightPower, frontLeftPower, frontRightPower);
     }
 
     @Override

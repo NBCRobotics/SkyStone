@@ -48,10 +48,10 @@ public class Drive implements Subsystem {
         this.frontLeftMotor = (DcMotorEx) this.hardwareMap.get(DcMotor.class, "fLDrive");
         this.frontRightMotor = (DcMotorEx) this.hardwareMap.get(DcMotor.class, "fRDrive");
 
-        this.backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        this.backRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        this.frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        this.frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        this.backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        this.backRightMotor.setDirection(DcMotor.Direction.FORWARD);
+        this.frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        this.frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
 
         this.imu = new RevIMU(this.hardwareMap, "imu");
     }

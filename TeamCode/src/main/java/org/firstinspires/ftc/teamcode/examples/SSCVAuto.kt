@@ -101,7 +101,7 @@ class SSCVAuto : LinearOpMode() {
         sleep(500)
         robot.pause()
         robot.drive(0.50) //Drives Forward to the Stones
-        sleep(2250)
+        sleep(2300)
         robot.pause()
         robot.claw?.position = 0.0
         robot.pause()
@@ -110,15 +110,15 @@ class SSCVAuto : LinearOpMode() {
         sleep(750)
         robot.pause()
         robot.strafe(1.0)//Heads to Foundation
-        sleep(4000)
+        sleep(4500)
         robot.pause()
-        robot.vSlide?.targetPosition = 1500 + robot.vSlide!!.currentPosition
+        robot.vSlide?.targetPosition = 1000 + robot.vSlide!!.currentPosition
         sleep(750)
         robot.hSlide?.position = 0.3
         sleep(550)
         robot.hSlide?.position = 0.5
         robot.drive(0.5)
-        sleep(900)
+        sleep(950)
         robot.pause()
         robot.claw?.position = robot.clawPinchPos //drops stone
         robot.pause()
@@ -148,12 +148,16 @@ class SSCVAuto : LinearOpMode() {
 
     fun moveFoundation()
     {
-        robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition - 1500
+        robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition - 1000
         robot.strafe(0.5)
         sleep(250)
         robot.pause()
         robot.hookDown()
-        robot.drive(-0.75, 0.75)
+        sleep(500)
+        robot.drive(-1.0)
+        sleep(1000)
+        robot.pause()
+        robot.drive(-1.0, 0.75)
         sleep(1200)
         robot.pause()
         robot.drive(1.0)
@@ -168,7 +172,7 @@ class SSCVAuto : LinearOpMode() {
         robot.drive(-0.75)
         sleep(1500)
         robot.pause()
-        robot.drive(-0.75, 0.75)
+        robot.drive(0.75, -0.75)
         sleep(500)
         robot.pause()
         robot.tapeMeasure?.power = 0.75
