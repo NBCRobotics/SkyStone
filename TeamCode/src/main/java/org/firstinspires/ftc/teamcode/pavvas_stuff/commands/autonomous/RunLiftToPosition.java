@@ -16,12 +16,12 @@ public class RunLiftToPosition implements Command {
 
     @Override
     public void start() {
-        this.lift.setLiftMotorPosition(position);
+
     }
 
     @Override
     public void periodic() {
-
+        this.lift.setLiftMotorPosition(position);
     }
 
     @Override

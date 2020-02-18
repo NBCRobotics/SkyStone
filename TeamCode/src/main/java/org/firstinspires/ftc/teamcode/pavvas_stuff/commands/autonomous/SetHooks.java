@@ -16,12 +16,12 @@ public class SetHooks implements Command {
 
     @Override
     public void start() {
-        this.hooks.setState(this.targetState);
+
     }
 
     @Override
     public void periodic() {
-
+        this.hooks.setState(this.targetState);
     }
 
     @Override

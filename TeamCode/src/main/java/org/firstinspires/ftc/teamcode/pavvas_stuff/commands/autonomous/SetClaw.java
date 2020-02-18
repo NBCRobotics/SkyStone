@@ -16,12 +16,12 @@ public class SetClaw implements Command {
 
     @Override
     public void start() {
-        this.lift.setClawState(targetState);
+
     }
 
     @Override
     public void periodic() {
-
+        this.lift.setClawState(targetState);
     }
 
     @Override

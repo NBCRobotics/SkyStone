@@ -22,12 +22,12 @@ public class RunParkerForTime implements Command {
     @Override
     public void start() {
         this.timer.reset();
-        this.parker.setPower(1.0);
+
     }
 
     @Override
     public void periodic() {
-
+        this.parker.setPower(1.0);
     }
 
     @Override

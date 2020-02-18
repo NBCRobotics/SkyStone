@@ -30,6 +30,11 @@ public class RunHorizontalSlideForTime implements Command {
     public void start() {
         this.timer.reset();
 
+
+    }
+
+    @Override
+    public void periodic() {
         switch (this.direction) {
             default:
             case OUT:
@@ -39,11 +44,6 @@ public class RunHorizontalSlideForTime implements Command {
                 this.lift.setHorizontalSlidePower(1.0);
                 break;
         }
-    }
-
-    @Override
-    public void periodic() {
-
     }
 
     @Override
