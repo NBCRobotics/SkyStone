@@ -97,29 +97,38 @@ class SSCVAuto : LinearOpMode() {
         robot.drive(-0.75,0.75)
         sleep(800)
         robot.pause()
+
         robot.drive(-0.75)
         sleep(500)
         robot.pause()
+
         robot.drive(0.50) //Drives Forward to the Stones
         sleep(2300)
         robot.pause()
+
         robot.claw?.position = 0.0
         robot.pause()
+
         sleep(500)
         robot.drive(-0.50)
         sleep(750)
         robot.pause()
+
         robot.strafe(1.0)//Heads to Foundation
         sleep(4500)
         robot.pause()
+
         robot.vSlide?.targetPosition = 1000 + robot.vSlide!!.currentPosition
         sleep(750)
+
         robot.hSlide?.position = 0.3
         sleep(550)
+
         robot.hSlide?.position = 0.5
         robot.drive(0.5)
         sleep(950)
         robot.pause()
+
         robot.claw?.position = robot.clawPinchPos //drops stone
         robot.pause()
         /*robot.drive(-0.5)
