@@ -32,7 +32,7 @@ class SSCVAuto : LinearOpMode() {
         telemetry.addData("Status: ", "Autonomous Initialized")
         telemetry.update()
         robot.init(hardwareMap)
-        robot.vSlide?.mode = DcMotor.RunMode.RUN_TO_POSITION
+        //robot.vSlide?.mode = DcMotor.RunMode.RUN_TO_POSITION
         robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition
         val cameraMonitorViewId = hardwareMap.appContext.resources.getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.packageName)
         // Comment the below line and uncomment the next line to prevent sending camera view to the monitor

@@ -29,8 +29,7 @@ class SSMechTeleOp : OpMode() {
         telemetry.update()
         //initializes all parts
         robot.init(hardwareMap)
-        robot.vSlide?.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER //Use encoders for linear slide motor
-
+        //robot.vSlide?.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER //Use encoders for linear slide motor
     }
 
     override fun start() { //runs once when play button is pushed

@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.hardware.*
-import kotlin.math.*
-import org.firstinspires.ftc.robotcore.external.Telemetry
-import org.openftc.revextensions2.RevBulkData
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.pow
 
 /*
     TODO: Create interfaces that lead to abstract class and seperate auto and tele
@@ -21,7 +21,7 @@ class SSMechRobot {
     var bRDrive: DcMotor? = null
     var fLDrive: DcMotor? = null
     var fRDrive: DcMotor? = null
-    var vSlide: DcMotor? = null
+    var vSlide: DcMotorEx? = null
     var tapeMeasure: DcMotor? = null
     var hSlide: Servo? = null
     var claw: Servo? = null
@@ -37,6 +37,7 @@ class SSMechRobot {
     var tooLow = true //if v slide is too low
     var touched = false //if touch sensor is pressed
     var curPos = 0
+    var coefficients = PIDFCoefficients(13.0, 0.0, 8.0, 18.0)
 
     var motF = DcMotorSimple.Direction.FORWARD
     var motR = DcMotorSimple.Direction.REVERSE
@@ -63,7 +64,7 @@ class SSMechRobot {
         bRDrive = ahwdMap.dcMotor.get("bRDrive")
         fLDrive = ahwdMap.dcMotor.get("fLDrive")
         fRDrive = ahwdMap.dcMotor.get("fRDrive")
-        vSlide = ahwdMap.dcMotor.get("vSlide")
+        vSlide = ahwdMap.dcMotor.get("vSlide") as DcMotorEx
         tapeMeasure = ahwdMap.dcMotor.get("tapeMeasure")
         hSlide = ahwdMap.servo.get("hSlide")
         claw = ahwdMap.servo.get("claw")
@@ -90,9 +91,11 @@ class SSMechRobot {
         fRDrive?.power = 0.0
         bLDrive?.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
         bRDrive?.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+        vSlide?.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         vSlide?.mode = DcMotor.RunMode.RUN_USING_ENCODER //Use encoders for linear slide motor
         vSlide?.mode = DcMotor.RunMode.RUN_TO_POSITION
         vSlide?.targetPosition = vSlide!!.currentPosition
+        vSlide?.setVelocityPIDFCoefficients(13.0, 0.0, 8.0, 18.0)
         curPos = this.vSlide!!.currentPosition
     }
 
