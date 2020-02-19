@@ -91,10 +91,10 @@ class SSMechRobot {
         fRDrive?.power = 0.0
         bLDrive?.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
         bRDrive?.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
-        vSlide?.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-        vSlide?.mode = DcMotor.RunMode.RUN_USING_ENCODER //Use encoders for linear slide motor
-        vSlide?.mode = DcMotor.RunMode.RUN_TO_POSITION
+        vSlide?.mode = DcMotor.RunMode.RUN_TO_POSITION //Use encoders for linear slide motor
         vSlide?.targetPosition = vSlide!!.currentPosition
+        vSlide?.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        vSlide?.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         vSlide?.setVelocityPIDFCoefficients(13.0, 0.0, 8.0, 18.0)
         curPos = this.vSlide!!.currentPosition
     }
