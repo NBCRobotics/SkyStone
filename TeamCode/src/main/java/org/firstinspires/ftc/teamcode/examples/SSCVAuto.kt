@@ -45,7 +45,7 @@ class SSCVAuto : LinearOpMode() {
         robot.leftHook?.position = 0.0
         robot.rightHook?.position = 0.0
         //robot.vSlide?.targetPosition = 50 + robot.vSlide!!.currentPosition
-        robot.vSlide?.power = 1.0
+
 
         /*
          * Set the camera to send streamed image through the Skystone Detector vision pipeline and

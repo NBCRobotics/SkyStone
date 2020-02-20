@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.SSMechRobot
-import kotlin.math.*
 
 /**
  * Created by KasaiYuki on 9/20/2019.
@@ -33,7 +32,6 @@ class SSMechTeleOp : OpMode() {
     }
 
     override fun start() { //runs once when play button is pushed
-        robot.vSlide?.mode = DcMotor.RunMode.RUN_USING_ENCODER
         robot.leftHook?.position = 0.0
         robot.rightHook?.position = 0.0
     }
@@ -41,16 +39,17 @@ class SSMechTeleOp : OpMode() {
     override fun loop() {
 
         /**
-         * Gamepad1: Tank Drive-Left Stick y=Left Motor; right stick y=Right Motor
-         * Gamepad2: Crane: Right Stick Y = Y Slide; Left Bumper = pinch claw; Left Stick Y= X Slide; a = foundation hooks
+         * Gamepad1: Mechanum Drive: Left Stick Y = power, Left Stick X = strafe, Right Stick X = turn; right bumper = Foundation hook
+         * Gamepad2: Right Stick Y = Y Slide; Left Bumper = pinch claw; Left Stick Y= X Slide; Triggers = tape measure; right bumper = capstone gate
          */
 
         robot.mechanumPOV(gamepad1) //Drive Power Calculation
         robot.vSlide?.power = robot.vSlideCalc(gamepad2)
         robot.hSlide?.position = robot.hSlideCalc(gamepad2)
         robot.pinch(gamepad2) //operates claw
-        robot.dropHook(gamepad2) //operates hooks
+        robot.foundHooks(gamepad1) //operates foundation hooks
         robot.nyoomPark(gamepad2) //operates the tape measure
+        robot.capGate(gamepad2) //operates the tape measure
 
 
         if (!robot.touch!!.state) telemetry.addData("Touch Sensor:", "Activated")
@@ -70,7 +69,8 @@ class SSMechTeleOp : OpMode() {
 
         telemetry.addData("Attachments:", "Claw = ${robot.claw?.position?.toFloat()}, " +
                 "Tape Measure = ${robot.tapeMeasure?.power}" +
-                "Hooks: ${robot.leftHook?.position},${robot.rightHook?.position}")
+                "Hooks: ${robot.leftHook?.position},${robot.rightHook?.position}" +
+                "Capstone Gate = ${robot.capstoneGate?.position}")
 
         telemetry.addData("Gamepad Stick Vals (x,y):","Left Stick= ${gamepad1.left_stick_x}, ${gamepad1.left_stick_y}; " +
                 "Right Stick = ${gamepad1.right_stick_x}, ${gamepad1.right_stick_y}")

@@ -27,6 +27,7 @@ class SSMechRobot {
     var claw: Servo? = null
     var rightHook: Servo? = null
     var leftHook: Servo? = null
+    var capstoneGate: Servo? = null
     var touch: DigitalChannel? = null
     val clawPinchPos = 0.40
     var slowDown = 1.85//default
@@ -70,6 +71,7 @@ class SSMechRobot {
         claw = ahwdMap.servo.get("claw")
         leftHook = ahwdMap.servo.get("leftHook")
         rightHook = ahwdMap.servo.get("rightHook")
+        capstoneGate = ahwdMap.servo.get("capstoneGate")
         touch = ahwdMap.digitalChannel.get("touch")
 
         //Setting direction
@@ -82,6 +84,7 @@ class SSMechRobot {
         claw?.direction = serF
         rightHook?.direction = serR
         leftHook?.direction = serF
+        capstoneGate?.direction = serF
         tapeMeasure?.direction = motF
 
 
@@ -91,12 +94,12 @@ class SSMechRobot {
         fRDrive?.power = 0.0
         bLDrive?.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
         bRDrive?.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
-        vSlide?.mode = DcMotor.RunMode.RUN_TO_POSITION //Use encoders for linear slide motor
-        vSlide?.targetPosition = vSlide!!.currentPosition
-        vSlide?.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        vSlide?.mode = DcMotor.RunMode.RUN_USING_ENCODER //Use encoders for linear slide motor
+        curPos = this.vSlide!!.currentPosition
+        //vSlide?.targetPosition = vSlide!!.currentPosition
         vSlide?.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         vSlide?.setVelocityPIDFCoefficients(13.0, 0.0, 8.0, 18.0)
-        curPos = this.vSlide!!.currentPosition
+        this.capstoneGate?.position = 0.5
     }
 
     //METHODS
@@ -230,7 +233,7 @@ class SSMechRobot {
      *
      * @param gp the gamepad used to control the hooks
      */
-    fun dropHook(gp: Gamepad) {
+    fun foundHooks(gp: Gamepad) {
 /*        var down = false
         var changed = false
 
@@ -247,12 +250,20 @@ class SSMechRobot {
             this.leftHook?.position = 0.7
             this.rightHook?.position = 0.7
         }*/
-        if (gp.a) { //hook down
+        if (gp.right_bumper) { //hook down
             hookDown()
         } else { //default position
             hookUp()
         }
 
+    }
+
+    fun capGate(gp: Gamepad)
+    {
+        if(gp.right_bumper)
+            this.capstoneGate?.position = 0.8
+        else
+            this.capstoneGate?.position = 0.5
     }
 
     /**
