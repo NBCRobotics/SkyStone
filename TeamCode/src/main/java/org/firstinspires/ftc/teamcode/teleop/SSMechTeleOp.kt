@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.SSMechRobot
+import org.openftc.revextensions2.ExpansionHubEx
 
 /**
  * Created by KasaiYuki on 9/20/2019.
@@ -72,6 +73,8 @@ class SSMechTeleOp : OpMode() {
 
         telemetry.addData("Gamepad Stick Vals (x,y):","Left Stick= ${gamepad1.left_stick_x}, ${gamepad1.left_stick_y}; " +
                 "Right Stick = ${gamepad1.right_stick_x}, ${gamepad1.right_stick_y}")
+
+        telemetry.addData("Battery Voltage: ", robot.hub2?.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS))
     }
 
     override fun stop() {

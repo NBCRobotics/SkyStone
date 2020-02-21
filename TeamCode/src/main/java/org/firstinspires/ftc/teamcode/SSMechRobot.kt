@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.hardware.*
+import org.openftc.revextensions2.ExpansionHubEx
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.pow
@@ -29,6 +30,7 @@ class SSMechRobot {
     var leftHook: Servo? = null
     var capstoneGate: Servo? = null
     var touch: DigitalChannel? = null
+    var hub2: ExpansionHubEx? = null
     val clawPinchPos = 0.40
     var slowDown = 1.85//default
     var slideP = 0.5 //h slide postion
@@ -77,6 +79,7 @@ class SSMechRobot {
         rightHook = ahwdMap.servo.get("rightHook")
         capstoneGate = ahwdMap.servo.get("capstoneGate")
         touch = ahwdMap.digitalChannel.get("touch")
+        hub2 = ahwdMap.get(ExpansionHubEx::class.java, "Expansion Hub 2")
 
         //Setting direction
         bLDrive?.direction = motF
@@ -210,6 +213,8 @@ class SSMechRobot {
         this.brake()
         this.vSlide?.power = 0.0
         this.hSlide?.position = 0.5
+        this.tapeMeasure?.power = 0.0
+
 
     }
 
@@ -271,17 +276,6 @@ class SSMechRobot {
             this.capstoneGate?.position = 0.5
     }
 
-    /**
-     * Controls the claw used for grabbing stones by spinning the drive servo and translating the linear gear.
-     * Currently NOT in use.
-     *
-     * @param gp the gamepad used to control the hooks
-     */
-    fun clamp(gp: Gamepad) //Controls claw for grabbing stones
-    {
-        if (gp.a) this.claw?.position = 0.55
-        if (gp.b) this.claw?.position = 0.45
-    }
 
     fun pause() {
         this.brake()
