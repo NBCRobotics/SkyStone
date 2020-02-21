@@ -76,6 +76,7 @@ class SSMechTeleOp : OpMode() {
 
     override fun stop() {
         robot.brake()
+        robot.vSlide?.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
         telemetry.addData("Status: ", "TeleOp Terminated")
         telemetry.update()
     }
