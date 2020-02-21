@@ -31,7 +31,7 @@ class SSMechRobot {
     var capstoneGate: Servo? = null
     var touch: DigitalChannel? = null
     var hub2: ExpansionHubEx? = null
-    val clawPinchPos = 0.40
+    val clawUpPos = 0.6
     var slowDown = 1.85//default
     var slideP = 0.5 //h slide postion
     val max = 5800
@@ -287,11 +287,11 @@ class SSMechRobot {
      *
      * @param gp the gamepad used to control the hooks
      */
-    fun pinch(gp: Gamepad) { //Controls claw for grabbing stones
+    fun rotateClaw(gp: Gamepad) { //Controls claw for grabbing stones
         if (gp.left_bumper) { //hook down
             this.claw?.position = 0.00
         } else { //default position
-            this.claw?.position = clawPinchPos
+            this.claw?.position = clawUpPos
         }
         /*
         Toggle Function

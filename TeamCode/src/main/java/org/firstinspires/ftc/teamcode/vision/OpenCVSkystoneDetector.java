@@ -44,6 +44,7 @@ public class OpenCVSkystoneDetector extends OpenCvPipeline {
         this(null);
     }
 
+
     public OpenCVSkystoneDetector(double firstSkystonePositionPercentage, double percentSpacing, double stoneWidth, double stoneHeight, Telemetry tl){
         defaultValues = false;
 
@@ -122,13 +123,13 @@ public class OpenCVSkystoneDetector extends OpenCvPipeline {
                     Imgproc.rectangle(input, blocks.get(2), new Scalar(255, 0, 0), 30);
                     break;
                 case 2:
+                    position = SkystonePosition.RIGHT_STONE;
                     Imgproc.rectangle(input, blocks.get(0), new Scalar(255, 0, 0), 30);
                     Imgproc.rectangle(input, blocks.get(1), new Scalar(255, 0, 0), 30);
                     Imgproc.rectangle(input, blocks.get(2), new Scalar(0, 255, 0), 30);
-                    position = SkystonePosition.RIGHT_STONE;
                     break;
                 default:
-                    position = SkystonePosition.RIGHT_STONE;
+                    position = SkystonePosition.CENTER_STONE;
                     Imgproc.rectangle(input, blocks.get(0), new Scalar(255, 0, 0), 30);
                     Imgproc.rectangle(input, blocks.get(1), new Scalar(255, 0, 0), 30);
                     Imgproc.rectangle(input, blocks.get(2), new Scalar(255, 0, 0), 30);

@@ -53,7 +53,7 @@ class SSLoadingZoneB : LinearOpMode()
         robot.drive(0.5)
         sleep(900)
         pause()
-        robot.claw?.position = robot.clawPinchPos
+        robot.claw?.position = robot.clawUpPos
         pause()
         robot.drive(-0.5)
         sleep(1200)

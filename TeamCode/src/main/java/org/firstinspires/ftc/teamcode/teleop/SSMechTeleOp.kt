@@ -46,7 +46,7 @@ class SSMechTeleOp : OpMode() {
         robot.mechanumPOV(gamepad1) //Drive Power Calculation
         robot.vSlide?.power = robot.vSlideCalc(gamepad2)
         robot.hSlide?.position = robot.hSlideCalc(gamepad2)
-        robot.pinch(gamepad2) //operates claw
+        robot.rotateClaw(gamepad2) //operates claw
         robot.foundHooks(gamepad1) //operates foundation hooks
         robot.nyoomPark(gamepad2) //operates the tape measure
         robot.capGate(gamepad1) //operates the tape measure

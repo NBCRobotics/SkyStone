@@ -35,7 +35,7 @@ class SSBuildingZoneR : LinearOpMode()
         robot.strafe(1.0)
         sleep(3550)
         pause()
-        robot.claw?.position = robot.clawPinchPos
+        robot.claw?.position = robot.clawUpPos
         sleep(1000)
         robot.drive(0.5)
         sleep(800)
@@ -60,7 +60,7 @@ class SSBuildingZoneR : LinearOpMode()
         sleep(800)
         pause()
         //robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition - 100
-        robot.claw?.position = robot.clawPinchPos
+        robot.claw?.position = robot.clawUpPos
         sleep(1000)
         robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition - 3000
         robot.strafe(1.0)
