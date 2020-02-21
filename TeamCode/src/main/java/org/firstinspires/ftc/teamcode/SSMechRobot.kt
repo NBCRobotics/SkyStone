@@ -107,7 +107,7 @@ class SSMechRobot {
         //vSlide?.targetPosition = vSlide!!.currentPosition
         vSlide?.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         vSlide?.setVelocityPIDFCoefficients(kP, kI, kD, kF)
-        this.capstoneGate?.position = 0.5
+        this.capstoneGate?.position = 0.8
     }
 
     //METHODS
@@ -270,10 +270,10 @@ class SSMechRobot {
 
     fun capGate(gp: Gamepad)
     {
-        if(gp.right_bumper)
-            this.capstoneGate?.position = 0.8
-        else
+        if(gp.left_bumper)
             this.capstoneGate?.position = 0.5
+        else
+            this.capstoneGate?.position = 0.8
     }
 
 

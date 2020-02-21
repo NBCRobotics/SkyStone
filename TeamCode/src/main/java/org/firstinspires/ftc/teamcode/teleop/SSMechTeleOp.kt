@@ -39,8 +39,8 @@ class SSMechTeleOp : OpMode() {
 
     override fun loop() {
         /**
-         * Gamepad1: Mechanum Drive: Left Stick Y = power, Left Stick X = strafe, Right Stick X = turn; right bumper = Foundation hook
-         * Gamepad2: Right Stick Y = Y Slide; Left Bumper = pinch claw; Left Stick Y= X Slide; Triggers = tape measure; right bumper = capstone gate
+         * Gamepad1: Mechanum Drive: Left Stick Y = power, Left Stick X = strafe, Right Stick X = turn; right bumper = Foundation hook; left bumper = capstone gate
+         * Gamepad2: Right Stick Y = Y Slide; Left Bumper = pinch claw; Left Stick Y= X Slide; Triggers = tape measure;
          */
 
         robot.mechanumPOV(gamepad1) //Drive Power Calculation
@@ -49,7 +49,7 @@ class SSMechTeleOp : OpMode() {
         robot.pinch(gamepad2) //operates claw
         robot.foundHooks(gamepad1) //operates foundation hooks
         robot.nyoomPark(gamepad2) //operates the tape measure
-        robot.capGate(gamepad2) //operates the tape measure
+        robot.capGate(gamepad1) //operates the tape measure
 
         if (!robot.touch!!.state) telemetry.addData("Touch Sensor:", "Activated")
 

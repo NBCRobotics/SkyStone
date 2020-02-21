@@ -108,8 +108,14 @@ class SSCVAuto : LinearOpMode() {
 
     fun moveToSkystone(ofset: Long) //ofset adds strafe timing and recalculates time to strafe to foundation. positive values for left skystone
     {
-        var batteryV = 13.5 - robot.hub2!!.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS).toLong()
-        val bComp: Long = (batteryV * 333).toLong() //should equal to 200 when batteryV = 0.6
+        robot.hSlide?.position = 0.0
+        sleep(900)
+        robot.hSlide?.position = 0.5
+        val batteryV = 0.0.toLong()
+        if(!(robot.hub2!!.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS) > 13.1)) {
+            val batteryV = 13.4 - robot.hub2!!.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS).toLong()
+        }
+        val bComp: Long = (batteryV * 100).toLong() //should equal to 200 when batteryV = 0.6
         camera?.closeCameraDevice()
         robot.drive(-0.75,0.75)
         sleep(800)
@@ -119,8 +125,8 @@ class SSCVAuto : LinearOpMode() {
         sleep(500)
         robot.pause()
 
-        robot.drive(0.50) //Drives Forward to the Stones
-        sleep(2700 + bComp)
+        robot.drive(1.0) //Drives Forward to the Stones
+        sleep(1200 + (bComp / 2))
         robot.pause()
 
         if(ofset > 0) { //skystone is on left
@@ -136,8 +142,8 @@ class SSCVAuto : LinearOpMode() {
         robot.pause()
 
         sleep(500)
-        robot.drive(-0.50)
-        sleep(1200 + bComp)
+        robot.drive(-1.0)
+        sleep(600 + (bComp / 2))
         robot.pause()
 
         robot.strafe(1.0)//Heads to Foundation
@@ -145,16 +151,16 @@ class SSCVAuto : LinearOpMode() {
         robot.pause()
 
         //robot.vSlide?.targetPosition = 1000 + robot.vSlide!!.currentPosition
-        robot.vSlide?.power = 0.5
-        sleep(1000)
+        robot.vSlide?.power = 1.0
+        sleep(1600)
         robot.vSlide?.power = 0.0
 
         robot.hSlide?.position = 0.3
         sleep(550)
-
         robot.hSlide?.position = 0.5
-        robot.drive(0.5)
-        sleep(950)
+
+        robot.drive(1.0)
+        sleep(475)
         robot.pause()
 
         robot.claw?.position = robot.clawPinchPos //drops stone
@@ -183,7 +189,7 @@ class SSCVAuto : LinearOpMode() {
     {
         //robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition - 1000
         robot.vSlide?.power = -0.5
-        sleep(700)
+        sleep(1000)
         robot.vSlide?.power = 0.0
 
         robot.strafe(0.5)
@@ -195,9 +201,9 @@ class SSCVAuto : LinearOpMode() {
         sleep(1000)
         robot.pause()
         robot.drive(-1.0, 0.75)
-        sleep(1200)
+        sleep(1500)
         robot.pause()
-        robot.drive(1.0)
+        robot.drive(0.5)
         sleep(1300)
         robot.pause()
         robot.hookUp()
@@ -206,14 +212,14 @@ class SSCVAuto : LinearOpMode() {
 
     fun park()
     {
-        robot.drive(-0.75)
-        sleep(1500)
+        robot.drive(-1.0)
+        sleep(1125)
         robot.pause()
         robot.drive(0.75, -0.75)
         sleep(700)
         robot.pause()
-        robot.tapeMeasure?.power = 0.75
-        sleep(1200)
+        robot.tapeMeasure?.power = 1.0
+        sleep(900)
         robot.tapeMeasure?.power = 0.0
         robot.stop()
     }
