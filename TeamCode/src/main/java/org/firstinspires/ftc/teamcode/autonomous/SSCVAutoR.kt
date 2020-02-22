@@ -56,7 +56,7 @@ class SSCVAutoR : LinearOpMode() {
         //robot.vSlide?.targetPosition = 50 + robot.vSlide!!.currentPosition
         telemetry.addData("Current Position", robot.vSlide!!.currentPosition)
         telemetry.update()
-        sleep(200)
+
 
         val pos = skystoneDetector?.skystonePosition ?: OpenCVSkystoneDetector.SkystonePosition.CENTER_STONE //Elvis Operator:
         // returns pos if not null, and left if null
