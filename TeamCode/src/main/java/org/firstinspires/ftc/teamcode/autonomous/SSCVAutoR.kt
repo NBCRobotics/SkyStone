@@ -12,8 +12,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation
 import org.openftc.easyopencv.OpenCvInternalCamera
 import org.openftc.revextensions2.ExpansionHubEx
 
-@Autonomous(name = "SSCVAuto", group = "examples")
-class SSCVAuto : LinearOpMode() {
+@Autonomous(group = "Vision")
+class SSCVAutoR : LinearOpMode() {
     private var skystoneDetector: OpenCVSkystoneDetector? = null
     private var camera: OpenCvCamera? = null
     val robot = SSMechRobot()
@@ -45,7 +45,7 @@ class SSCVAuto : LinearOpMode() {
         * Set the camera to send streamed image through the Skystone Detector vision pipeline and
         * begin streaming images. Image resolution is FRAME_WIDTH x FRAME_HEIGHT pixels.
         */
-        skystoneDetector = OpenCVSkystoneDetector(20.0, 35.0, 50.0, 50.0, telemetry)
+        skystoneDetector = OpenCVSkystoneDetector(robot.cvFirstPercent, robot.cvPercentSpace, robot.cvStoneWidth, robot.cvStoneHeight, telemetry)
         camera?.setPipeline(skystoneDetector)
         camera?.startStreaming(FRAME_WIDTH, FRAME_HEIGHT, ROTATION)
 
@@ -70,17 +70,6 @@ class SSCVAuto : LinearOpMode() {
             OpenCVSkystoneDetector.SkystonePosition.RIGHT_STONE -> skyRight()
         }
     }
-
-/*    override fun init_loop() {
-        telemetry.addData("Skystone Position: ", skystoneDetector!!.skystonePosition) // This is the important one!
-        telemetry.update()
-    }
-
-    override fun loop() {
-        telemetry.addData("Skystone Position: ", skystoneDetector!!.skystonePosition) // This is the important one!
-
-        telemetry.update()
-    }*/
 
     companion object {
         private val CAMERA_DIRECTION = OpenCvInternalCamera.CameraDirection.BACK // Which camera do we use?
@@ -128,11 +117,11 @@ class SSCVAuto : LinearOpMode() {
         robot.brake()
 
         if(ofset > 0) { //skystone is on left
-            robot.strafe(0.5)
+            robot.strafe(-0.5)
             sleep(ofset)
         }
         if(ofset < 0) { //skystone is on right
-            robot.strafe(-0.5)
+            robot.strafe(0.5)
             sleep(-ofset)
         }
 
@@ -148,7 +137,7 @@ class SSCVAuto : LinearOpMode() {
         sleep(600 + (bComp / 2))
         robot.pause()
 
-        robot.strafe(1.0)//Heads to Foundation
+        robot.strafe(-1.0)//Heads to Foundation
         sleep(4500 - ofset)
         robot.pause()
 
@@ -167,29 +156,13 @@ class SSCVAuto : LinearOpMode() {
 
         robot.claw?.position = robot.clawUpPos //drops stone
         robot.pause()
-        /*robot.drive(-0.5)
-        sleep(1200)
-        robot.pause()
-        robot.vSlide?.targetPosition = robot.vSlide!!.currentPosition - 2500
-        sleep(750)
-        robot.pause()
-        robot.hSlide?.position = 0.7
-        sleep(550)
-        robot.pause()
-        robot.strafe(-0.5) //heads towards alliance bridge
-        sleep(2100)
-        robot.claw?.position = 0.0
-        robot.pause()
-        robot.strafe(-0.5)
-        sleep(2400)
-        robot.pause()*/
         moveFoundation()
     }
 
 
     fun moveFoundation()
     {
-        robot.strafe(0.5)
+        robot.strafe(-0.5)
         sleep(250)
         robot.pause()
         robot.hookDown()
@@ -197,7 +170,7 @@ class SSCVAuto : LinearOpMode() {
         robot.drive(-1.0)
         sleep(1200)
         robot.pause()
-        robot.drive(-1.0, 0.75)
+        robot.drive(0.75, -1.0)
         sleep(1500)
         robot.pause()
         robot.drive(0.75)
@@ -213,7 +186,7 @@ class SSCVAuto : LinearOpMode() {
         robot.drive(-1.0)
         sleep(1300)
         robot.pause()
-        robot.drive(0.75, -0.75)
+        robot.drive(-0.75, 0.75)
         sleep(700)
         robot.pause()
         robot.vSlide?.power = -1.0

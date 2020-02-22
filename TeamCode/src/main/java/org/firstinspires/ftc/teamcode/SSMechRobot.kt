@@ -46,6 +46,11 @@ class SSMechRobot {
     val kD = 8.0
     val kF = 18.0
 
+    val cvFirstPercent = 20.0
+    val cvPercentSpace = 35.0
+    val cvStoneWidth = 55.0
+    val cvStoneHeight = 50.0
+
     var motF = DcMotorSimple.Direction.FORWARD
     var motR = DcMotorSimple.Direction.REVERSE
     var serR = Servo.Direction.REVERSE
@@ -109,6 +114,7 @@ class SSMechRobot {
         vSlide?.setVelocityPIDFCoefficients(kP, kI, kD, kF)
         this.capstoneGate?.position = 0.8
     }
+
 
     //METHODS
     /**
