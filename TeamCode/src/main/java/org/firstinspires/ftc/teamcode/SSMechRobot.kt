@@ -46,10 +46,10 @@ class SSMechRobot {
     val kD = 8.0
     val kF = 18.0
 
-    val cvFirstPercent = 20.0
-    val cvPercentSpace = 35.0
-    val cvStoneWidth = 55.0
-    val cvStoneHeight = 50.0
+    val cvFirstPercent = 23.0
+    val cvPercentSpace = 27.0
+    val cvStoneWidth = 50.0
+    val cvStoneHeight = 90.0
 
     var motF = DcMotorSimple.Direction.FORWARD
     var motR = DcMotorSimple.Direction.REVERSE
@@ -145,9 +145,9 @@ class SSMechRobot {
      */
     fun strafe(pow: Double) //Positive Value = Left Strafe || Negative Value = Right Strafe
     {
-        bLDrive?.power = -pow / 1.11
+        bLDrive?.power = -pow / 1.1
         fLDrive?.power = pow
-        bRDrive?.power = pow / 1.12
+        bRDrive?.power = pow / 1.11
         fRDrive?.power = -pow
     }
 

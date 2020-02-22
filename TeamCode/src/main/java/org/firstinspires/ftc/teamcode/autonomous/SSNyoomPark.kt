@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.SSMechRobot
  */
 @Autonomous(group = "Autonomous")
 //@Disabled
-class SSParkAuto : LinearOpMode()
+class SSNyoomPark : LinearOpMode()
 {
     val robot = SSMechRobot()
 
@@ -19,15 +19,11 @@ class SSParkAuto : LinearOpMode()
     override fun runOpMode() {
         telemetry.addData("Status: ", "Autonomous Initialized")
         telemetry.update()
-
         robot.init(hardwareMap)
-        //robot.vSlide?.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-        //robot.vSlide?.mode = DcMotor.RunMode.RUN_USING_ENCODER
-        robot.vSlide?.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
         waitForStart()
-        sleep(5000)
-        robot.drive(-0.5)
-        sleep(1000)
+
+        robot.tapeMeasure?.power = 1.0
+        sleep(250)
         robot.brake()
 
         //https://www.reddit.com/r/FTC/comments/78l5o0/how_to_program_encoders/

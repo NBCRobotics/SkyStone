@@ -79,7 +79,7 @@ class SSCVAutoB : LinearOpMode() {
 
     fun skyLeft()
     {
-        moveToSkystone(750)
+        moveToSkystone(840)
     }
 
     fun skyCenter()
@@ -89,7 +89,7 @@ class SSCVAutoB : LinearOpMode() {
 
     fun skyRight()
     {
-        moveToSkystone(-750)
+        moveToSkystone(-840)
     }
 
     fun moveToSkystone(ofset: Long) //ofset adds strafe timing and recalculates time to strafe to foundation. positive values for left skystone
@@ -99,16 +99,16 @@ class SSCVAutoB : LinearOpMode() {
         sleep(2000)
         robot.hSlide?.position = 0.5
         val batteryV = 0.0.toLong()
-        if(!(robot.hub2!!.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS) > 13.1)) {
-            val batteryV = 13.2 - robot.hub2!!.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS).toLong()
+        if(!(robot.hub2!!.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS) > 13.3)) {
+            val batteryV = 13.3 - robot.hub2!!.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS).toLong()
         }
-        val bComp: Long = (batteryV * 5) //should equal to 200 when batteryV = 0.6
-        robot.drive(-0.75,0.75)
+        val bComp: Long = (batteryV * 10) //should equal to 200 when batteryV = 0.6
+        robot.drive(-0.8,0.8)
         sleep(800)
         robot.pause()
 
-        robot.drive(-0.75)
-        sleep(500)
+        robot.drive(-1.0)
+        sleep(600)
         robot.pause()
 
         robot.drive(1.0) //Drives Forward to the Stones
@@ -133,11 +133,11 @@ class SSCVAutoB : LinearOpMode() {
 
         sleep(500)
         robot.drive(-1.0)
-        sleep(600 + (bComp / 2))
+        sleep(525 + (bComp / 2))
         robot.pause()
 
         robot.strafe(1.0)//Heads to Foundation
-        sleep(4500 - ofset)
+        sleep(4300 - ofset)
         robot.pause()
 
         //robot.vSlide?.targetPosition = 1000 + robot.vSlide!!.currentPosition
@@ -150,7 +150,7 @@ class SSCVAutoB : LinearOpMode() {
         robot.hSlide?.position = 0.5
 
         robot.drive(1.0)
-        sleep(475)
+        sleep(750)
         robot.pause()
 
         robot.claw?.position = robot.clawUpPos //drops stone
