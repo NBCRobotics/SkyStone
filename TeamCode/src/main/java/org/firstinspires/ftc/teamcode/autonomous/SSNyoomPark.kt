@@ -22,9 +22,10 @@ class SSNyoomPark : LinearOpMode()
         robot.init(hardwareMap)
         waitForStart()
 
+        sleep(25000)
         robot.tapeMeasure?.power = 1.0
         sleep(250)
-        robot.brake()
+        robot.stop()
 
         //https://www.reddit.com/r/FTC/comments/78l5o0/how_to_program_encoders/
         telemetry.addData("Status: ", "Autonomous Terminated")

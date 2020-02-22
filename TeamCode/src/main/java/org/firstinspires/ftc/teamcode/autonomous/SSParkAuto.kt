@@ -25,7 +25,7 @@ class SSParkAuto : LinearOpMode()
         //robot.vSlide?.mode = DcMotor.RunMode.RUN_USING_ENCODER
         robot.vSlide?.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
         waitForStart()
-        sleep(5000)
+        sleep(25000)
         robot.drive(-0.5)
         sleep(1000)
         robot.brake()
