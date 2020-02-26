@@ -1,6 +1,12 @@
 package org.firstinspires.ftc.teamcode
 
+import com.qualcomm.hardware.bosch.BNO055IMU
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator
 import com.qualcomm.robotcore.hardware.*
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation
 import org.openftc.revextensions2.ExpansionHubEx
 import kotlin.math.abs
 import kotlin.math.max
@@ -31,6 +37,8 @@ class SSMechRobot {
     var capstoneGate: Servo? = null
     var touch: DigitalChannel? = null
     var hub2: ExpansionHubEx? = null
+    var imu: BNO055IMU? = null
+
     val clawUpPos = 0.6
     var slowDown = 1.85//default
     var slideP = 0.5 //h slide postion
@@ -40,6 +48,12 @@ class SSMechRobot {
     var tooLow = true //if v slide is too low
     var touched = false //if touch sensor is pressed
     var curPos = 0
+
+    // Set up the parameters with which we will use our IMU. Note that integration
+    // algorithm here just reports accelerations to the logcat log; it doesn't actually
+    // provide positional information.
+    var parameters = BNO055IMU.Parameters()
+
 
     val kP = 13.0
     val kI = 0.0
@@ -85,6 +99,7 @@ class SSMechRobot {
         capstoneGate = ahwdMap.servo.get("capstoneGate")
         touch = ahwdMap.digitalChannel.get("touch")
         hub2 = ahwdMap.get(ExpansionHubEx::class.java, "Expansion Hub 2")
+        imu = ahwdMap.get(BNO055IMU::class.java, "imu")
 
         //Setting direction
         bLDrive?.direction = motF
@@ -99,6 +114,8 @@ class SSMechRobot {
         capstoneGate?.direction = serF
         tapeMeasure?.direction = motF
 
+        initIMU()
+        imu?.initialize(parameters)
 
         bLDrive?.power = 0.0
         bRDrive?.power = 0.0
@@ -145,9 +162,9 @@ class SSMechRobot {
      */
     fun strafe(pow: Double) //Positive Value = Left Strafe || Negative Value = Right Strafe
     {
-        bLDrive?.power = -pow / 1.1
+        bLDrive?.power = -pow
         fLDrive?.power = pow
-        bRDrive?.power = pow / 1.11
+        bRDrive?.power = pow
         fRDrive?.power = -pow
     }
 
@@ -161,7 +178,7 @@ class SSMechRobot {
      */
     fun drive(leftM: Double, rightM: Double) { //used for turning
         leftPow(leftM)
-        rightPow(rightM) // * 1.5)
+        rightPow(rightM)
     }
 
     /**
@@ -178,8 +195,7 @@ class SSMechRobot {
         // Put powers in the range of -1 to 1 only if they aren't already (not
         // checking would cause us to always drive at full speed)
 
-        slowDown = gp.left_trigger + 1.0 //Dynamic Slowdown
-        //slowDown = if(gamepad1.left_bumper) 1.75 else 1.00 //condensed if else
+        slowDown = (gp.left_trigger * 3) + 1.0  //Dynamic Slowdown
 
         var drive = (gp.left_stick_y).toDouble()
         var turn = -gp.left_stick_x.toDouble() * 1.5
@@ -200,11 +216,10 @@ class SSMechRobot {
         }
         // Divide everything by nor (it's positive so we don't need to worry
         // about signs)
-        //need to compensate for difference in core hex and 40:1 motors
-        this.fLDrive?.power = (frontLeftPower / slowDown) * 1.05
-        this.bLDrive?.power = (backLeftPower / slowDown) * 1.05 / 1.12
-        this.fRDrive?.power = (frontRightPower / slowDown) * 1.05
-        this.bRDrive?.power = (backRightPower / slowDown) * 1.05 / 1.12
+        this.fLDrive?.power = (frontLeftPower / slowDown)
+        this.bLDrive?.power = (backLeftPower / slowDown)
+        this.fRDrive?.power = (frontRightPower / slowDown)
+        this.bRDrive?.power = (backRightPower / slowDown)
 
     }
 
@@ -250,22 +265,6 @@ class SSMechRobot {
      * @param gp the gamepad used to control the hooks
      */
     fun foundHooks(gp: Gamepad) {
-/*        var down = false
-        var changed = false
-
-        if(gp.a and !changed) {
-            if(!gp.a)  down = !down
-            changed = true
-        } else if(!gp.a) changed = false
-
-        if(down) { //up
-            this.leftHook?.position = 0.0
-            this.rightHook?.position = 0.0
-        }
-        else { //down
-            this.leftHook?.position = 0.7
-            this.rightHook?.position = 0.7
-        }*/
         if (gp.right_bumper) { //hook down
             hookDown()
         } else { //default position
@@ -354,5 +353,23 @@ class SSMechRobot {
         //Cubing power gives finer control near 0 and more speed closer to 1/max
         //Flipped sign as gamepads have opposite signs and squaring a negative would remove this
     }
-}
 
+    fun initIMU()
+    {
+        this.parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES
+        this.parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC
+        this.parameters.calibrationDataFile = "BNO055IMUCalibration.json" // see the calibration sample opmode
+        this.parameters.loggingEnabled = true
+        this.parameters.loggingTag = "IMU"
+        this.parameters.accelerationIntegrationAlgorithm = JustLoggingAccelerationIntegrator()
+    }
+
+    fun turnAround()
+    {
+        var curAngle = imu?.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES)
+        while(curAngle?.firstAngle != imu?.angularOrientation!!.firstAngle + 180)
+        {
+            this.drive(-0.5, 0.5)
+        }
+    }
+}

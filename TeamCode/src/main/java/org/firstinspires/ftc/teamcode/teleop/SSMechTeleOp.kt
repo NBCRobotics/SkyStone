@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.teleop
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference
 import org.firstinspires.ftc.teamcode.SSMechRobot
 import org.openftc.revextensions2.ExpansionHubEx
 
@@ -50,6 +53,8 @@ class SSMechTeleOp : OpMode() {
         robot.foundHooks(gamepad1) //operates foundation hooks
         robot.nyoomPark(gamepad2) //operates the tape measure
         robot.capGate(gamepad1) //operates the tape measure
+        if(gamepad1.y)
+            robot.turnAround()
 
         if (!robot.touch!!.state) telemetry.addData("Touch Sensor:", "Activated")
 
@@ -57,7 +62,8 @@ class SSMechTeleOp : OpMode() {
 
         if (robot.tooLow) telemetry.addData("Linear Slide Y Error:", "MIN HEIGHT REACHED")
 
-        if (gamepad1.left_trigger > 0.0) telemetry.addData("Slowdown:", "Engaged!")
+        if (gamepad1.left_trigger > 0.0) telemetry.addData("Slowdown:", "Engaged at ${gamepad1.left_trigger}")
+
 
         telemetry.addData("Linear Slides", "V: ${robot.vSlide?.power}  ;  H: ${robot.hSlide?.position}") //kotlin string templates
 
@@ -75,6 +81,10 @@ class SSMechTeleOp : OpMode() {
                 "Right Stick = ${gamepad1.right_stick_x}, ${gamepad1.right_stick_y}")
 
         telemetry.addData("Battery Voltage: ", robot.hub2?.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS))
+
+        telemetry.addData("Current IMU Angle Header: ", robot.imu?.angularOrientation)
+
+        telemetry.addData("Current Angle: ", robot.imu?.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES)?.firstAngle)
     }
 
     override fun stop() {
@@ -84,35 +94,4 @@ class SSMechTeleOp : OpMode() {
         telemetry.update()
     }
 
-
-    fun tankMode()
-    {
-        //slowDown = gamepad1.left_trigger + 2.0
-        robot.slowDown = if(gamepad1.left_bumper) 2.35 else 1.00 //condensed if else
-
-
-        //Tank Drive-sets power equal to numerical value of joystick positions
-        leftPower = gamepad1.left_stick_y
-        rightPower = gamepad1.right_stick_y
-        robot.fLDrive?.power = leftPower.toDouble() / robot.slowDown
-        robot.bLDrive?.power = leftPower.toDouble() / robot.slowDown
-        robot.fRDrive?.power = rightPower.toDouble() / robot.slowDown
-        robot.bRDrive?.power = rightPower.toDouble() / robot.slowDown
-        telemetry.addData("front left: ${robot.fLDrive?.power}, front right: ${robot.fRDrive?.power}, " +
-                "back left: ${robot.bLDrive?.power}, back right: ${robot.bRDrive?.power}", "")
-
-    }
-
-
-    /*
-        Tank Mode 1: DPad control strafe, right joystick control power and turn
-     */
-
-    /*
-        Tank Mode 2: Old Tank mode with triggers controlling strafe
-     */
-
-    /*
-        Heli Mode: Left Joystick control power, right joystick controls turning, triggers control strafe
-     */
 }
