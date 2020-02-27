@@ -66,6 +66,15 @@ class SSMechRobot {
     val cvStoneWidth = 50.0
     val cvStoneHeight = 90.0
 
+/*
+    enum class CVCONST {
+        FIRSTPERCENT = 23.0
+        PERCENTSPACE = 27.0
+        STONEWIDTH = 50.0
+        STONEHEIGHT = 90.0
+    }
+*/
+
     var motF = DcMotorSimple.Direction.FORWARD
     var motR = DcMotorSimple.Direction.REVERSE
     var serR = Servo.Direction.REVERSE
@@ -79,6 +88,13 @@ class SSMechRobot {
         //map for each dc
         //similar for servo and sensor
         hwdMap = ahwdMap
+/*        var motorList = arrayListOf<DcMotor?>(bLDrive, bRDrive, fLDrive, fRDrive, vSlide)
+        for (i in 0..motorList.size) {
+            motorList[i] = ahwdMap.dcMotor.get(motorList[i].toString())
+        }
+
+        var servoList = arrayListOf<Servo?>(hSlide, claw, leftHook, rightHook)
+        (0..servoList.size).forEach { i -> servoList[i] = ahwdMap.servo.get(servoList[i].toString())}*/
 
         bLDrive = ahwdMap.dcMotor.get("bLDrive")
         bRDrive = ahwdMap.dcMotor.get("bRDrive")
@@ -107,6 +123,7 @@ class SSMechRobot {
         rightHook?.direction = serR
         leftHook?.direction = serF
         capstoneGate?.direction = serF
+        capstoneFlipper?.direction = serR
         tapeMeasure?.direction = motF
 
         initIMU()
@@ -125,6 +142,7 @@ class SSMechRobot {
         vSlide?.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         vSlide?.setVelocityPIDFCoefficients(kP, kI, kD, kF)
         this.capstoneGate?.position = 0.8
+        this.capstoneFlipper?.position = 0.5
     }
 
 
@@ -230,6 +248,8 @@ class SSMechRobot {
         this.vSlide?.power = 0.0
         this.hSlide?.position = 0.5
         this.tapeMeasure?.power = 0.0
+
+
     }
 
     fun nyoomPark(gp: Gamepad) {
@@ -270,21 +290,24 @@ class SSMechRobot {
     {
         if(gp.left_bumper)
             this.capstoneGate?.position = 0.5
+            //this.capstoneFlipper?.position = 0.2
+
         else
             this.capstoneGate?.position = 0.8
+            //this.capstoneFlipper?.position = 0.0
     }
 
-    fun tipCapstone(gp: Gamepad)
-    {
-        if(gp.x)
-        {
-            this.capstoneGate?.position = 0.5
+    fun tipCapstone(gp: Gamepad){
+        if (gp.x){
+            this.capstoneFlipper?.position = 0.2
             Thread.sleep(500)
-            capstoneFlipper?.position = 0.25
-            Thread.sleep(1500)
+            this.capstoneGate?.position = 0.5
+            Thread.sleep(2000)
             this.capstoneFlipper?.position = 0.0
-            capstoneGate?.position = 0.8
-
+            this.capstoneGate?.position = 0.8
+        }
+        else{
+            this.capstoneFlipper?.position = 0.0
         }
     }
 
@@ -370,13 +393,12 @@ class SSMechRobot {
         this.parameters.accelerationIntegrationAlgorithm = JustLoggingAccelerationIntegrator()
     }
 
-    fun turnAround(gp: Gamepad)
+    fun turnAround()
     {
-        if(gp.y) {
-            var curAngle = imu?.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES)
-            while (curAngle?.firstAngle != imu?.angularOrientation!!.firstAngle + 180) {
-                this.drive(-0.5, 0.5)
-            }
+        var curAngle = imu?.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES)
+        while(curAngle!!.firstAngle < imu?.angularOrientation!!.firstAngle + 180)
+        {
+            this.drive(-0.5, 0.5)
         }
     }
 }
