@@ -35,6 +35,7 @@ class SSMechRobot {
     var rightHook: Servo? = null
     var leftHook: Servo? = null
     var capstoneGate: Servo? = null
+    var capstoneFlipper: Servo? = null
     var touch: DigitalChannel? = null
     var hub2: ExpansionHubEx? = null
     var imu: BNO055IMU? = null
@@ -64,6 +65,15 @@ class SSMechRobot {
     val cvPercentSpace = 27.0
     val cvStoneWidth = 50.0
     val cvStoneHeight = 90.0
+
+/*
+    enum class CVCONST {
+        FIRSTPERCENT = 23.0
+        PERCENTSPACE = 27.0
+        STONEWIDTH = 50.0
+        STONEHEIGHT = 90.0
+    }
+*/
 
     var motF = DcMotorSimple.Direction.FORWARD
     var motR = DcMotorSimple.Direction.REVERSE
@@ -97,6 +107,7 @@ class SSMechRobot {
         leftHook = ahwdMap.servo.get("leftHook")
         rightHook = ahwdMap.servo.get("rightHook")
         capstoneGate = ahwdMap.servo.get("capstoneGate")
+        capstoneFlipper = ahwdMap.servo.get("capstoneFlipper")
         touch = ahwdMap.digitalChannel.get("touch")
         hub2 = ahwdMap.get(ExpansionHubEx::class.java, "Expansion Hub 2")
         imu = ahwdMap.get(BNO055IMU::class.java, "imu")
@@ -112,6 +123,7 @@ class SSMechRobot {
         rightHook?.direction = serR
         leftHook?.direction = serF
         capstoneGate?.direction = serF
+        capstoneFlipper?.direction = serR
         tapeMeasure?.direction = motF
 
         initIMU()
@@ -130,6 +142,7 @@ class SSMechRobot {
         vSlide?.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         vSlide?.setVelocityPIDFCoefficients(kP, kI, kD, kF)
         this.capstoneGate?.position = 0.8
+        this.capstoneFlipper?.position = 0.5
     }
 
 
@@ -277,10 +290,26 @@ class SSMechRobot {
     {
         if(gp.left_bumper)
             this.capstoneGate?.position = 0.5
+            //this.capstoneFlipper?.position = 0.2
+
         else
             this.capstoneGate?.position = 0.8
+            //this.capstoneFlipper?.position = 0.0
     }
 
+    fun tipCapstone(gp: Gamepad){
+        if (gp.x){
+            this.capstoneFlipper?.position = 0.2
+            Thread.sleep(500)
+            this.capstoneGate?.position = 0.5
+            Thread.sleep(2000)
+            this.capstoneFlipper?.position = 0.0
+            this.capstoneGate?.position = 0.8
+        }
+        else{
+            this.capstoneFlipper?.position = 0.0
+        }
+    }
 
     fun pause() {
         this.brake()
@@ -367,7 +396,7 @@ class SSMechRobot {
     fun turnAround()
     {
         var curAngle = imu?.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES)
-        while(curAngle?.firstAngle != imu?.angularOrientation!!.firstAngle + 180)
+        while(curAngle!!.firstAngle < imu?.angularOrientation!!.firstAngle + 180)
         {
             this.drive(-0.5, 0.5)
         }
