@@ -386,12 +386,15 @@ class SSMechRobot {
         {
             this.drive(-0.5, 0.5)
         }*/
-        setDriveMode(DcMotor.RunMode.RUN_TO_POSITION)
-        fLDrive?.targetPosition = fLDrive!!.currentPosition + 224
-        fRDrive?.targetPosition = fRDrive!!.currentPosition + 224
-        bLDrive?.targetPosition = bLDrive!!.currentPosition + 224
-        bRDrive?.targetPosition = bRDrive!!.currentPosition + 224
-        Thread.sleep(3000)
+        setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER)
+        setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER)
+        setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER)
+        while(fLDrive!!.currentPosition < 225) {
+            fLDrive?.targetPosition = -224
+            fRDrive?.targetPosition = 224
+            bLDrive?.targetPosition = -224
+            bRDrive?.targetPosition = 224
+        }
         setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER)
 
     }

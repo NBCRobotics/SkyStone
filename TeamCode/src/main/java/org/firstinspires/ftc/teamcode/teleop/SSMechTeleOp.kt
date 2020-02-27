@@ -53,7 +53,8 @@ class SSMechTeleOp : OpMode() {
         robot.foundHooks(gamepad1) //operates foundation hooks
         robot.nyoomPark(gamepad2) //operates the tape measure
         robot.capGate(gamepad1) //operates the tape measure
-        robot.turnAround(gamepad1)
+        if(gamepad1.y)
+            robot.turnAround()
         robot.tipCapstone(gamepad1)
         if (!robot.touch!!.state) telemetry.addData("Touch Sensor:", "Activated")
 
