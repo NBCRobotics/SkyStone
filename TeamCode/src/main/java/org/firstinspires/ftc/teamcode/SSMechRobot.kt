@@ -184,7 +184,6 @@ class SSMechRobot {
     /**
      * Controls all 4 motors with each side having it's own power.
      * Right side needs compensation due to the unaligned center of mass
-     *
      * @param leftM the power assigned to the left 2 motors
      *
      * @param rightM the power assigned to the right 2 motors
@@ -299,12 +298,12 @@ class SSMechRobot {
 
     fun tipCapstone(gp: Gamepad){
         if (gp.x){
-            this.capstoneFlipper?.position = 0.2
-            Thread.sleep(500)
-            this.capstoneGate?.position = 0.5
-            Thread.sleep(2000)
+            this.capstoneGate?.position = 0.2
+/*            Thread.sleep(1000)
+            this.capstoneFlipper?.position = 0.5
+            Thread.sleep(3000)
             this.capstoneFlipper?.position = 0.0
-            this.capstoneGate?.position = 0.8
+            this.capstoneGate?.position = 0.8*/
         }
         else{
             this.capstoneFlipper?.position = 0.0
@@ -393,12 +392,28 @@ class SSMechRobot {
         this.parameters.accelerationIntegrationAlgorithm = JustLoggingAccelerationIntegrator()
     }
 
-    fun turnAround()
+    fun setDriveMode(mode: DcMotor.RunMode)
     {
+        fLDrive?.mode = mode
+        fRDrive?.mode = mode
+        bLDrive?.mode = mode
+        bRDrive?.mode = mode
+    }
+
+    fun turnAround()
+    {/*
         var curAngle = imu?.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES)
         while(curAngle!!.firstAngle < imu?.angularOrientation!!.firstAngle + 180)
         {
             this.drive(-0.5, 0.5)
-        }
+        }*/
+        setDriveMode(DcMotor.RunMode.RUN_TO_POSITION)
+        fLDrive?.targetPosition = fLDrive!!.currentPosition + 224
+        fRDrive?.targetPosition = fRDrive!!.currentPosition + 224
+        bLDrive?.targetPosition = bLDrive!!.currentPosition + 224
+        bRDrive?.targetPosition = bRDrive!!.currentPosition + 224
+        Thread.sleep(3000)
+        setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER)
+
     }
 }
