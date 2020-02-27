@@ -53,10 +53,8 @@ class SSMechTeleOp : OpMode() {
         robot.foundHooks(gamepad1) //operates foundation hooks
         robot.nyoomPark(gamepad2) //operates the tape measure
         robot.capGate(gamepad1) //operates the tape measure
+        robot.turnAround(gamepad1)
         robot.tipCapstone(gamepad1)
-        if(gamepad1.y)
-            robot.turnAround()
-
         if (!robot.touch!!.state) telemetry.addData("Touch Sensor:", "Activated")
 
         if (robot.tooHigh) telemetry.addData("Linear Slide Y Error:", "MAX HEIGHT REACHED")
