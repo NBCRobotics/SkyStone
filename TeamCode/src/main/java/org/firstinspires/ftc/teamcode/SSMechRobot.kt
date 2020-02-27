@@ -276,15 +276,16 @@ class SSMechRobot {
 
     fun tipCapstone(gp: Gamepad)
     {
-        if(gp.x)
-        {
-            this.capstoneGate?.position = 0.5
-            Thread.sleep(500)
-            capstoneFlipper?.position = 0.25
-            Thread.sleep(1500)
+        if (gp.x){
+            this.capstoneGate?.position = 0.2
+/*            Thread.sleep(1000)
+            this.capstoneFlipper?.position = 0.5
+            Thread.sleep(3000)
             this.capstoneFlipper?.position = 0.0
-            capstoneGate?.position = 0.8
-
+            this.capstoneGate?.position = 0.8*/
+        }
+        else{
+            this.capstoneFlipper?.position = 0.0
         }
     }
 
@@ -370,13 +371,28 @@ class SSMechRobot {
         this.parameters.accelerationIntegrationAlgorithm = JustLoggingAccelerationIntegrator()
     }
 
-    fun turnAround(gp: Gamepad)
+    fun setDriveMode(mode: DcMotor.RunMode)
     {
-        if(gp.y) {
-            var curAngle = imu?.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES)
-            while (curAngle?.firstAngle != imu?.angularOrientation!!.firstAngle + 180) {
-                this.drive(-0.5, 0.5)
-            }
-        }
+        fLDrive?.mode = mode
+        fRDrive?.mode = mode
+        bLDrive?.mode = mode
+        bRDrive?.mode = mode
+    }
+
+    fun turnAround()
+    {/*
+        var curAngle = imu?.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES)
+        while(curAngle!!.firstAngle < imu?.angularOrientation!!.firstAngle + 180)
+        {
+            this.drive(-0.5, 0.5)
+        }*/
+        setDriveMode(DcMotor.RunMode.RUN_TO_POSITION)
+        fLDrive?.targetPosition = fLDrive!!.currentPosition + 224
+        fRDrive?.targetPosition = fRDrive!!.currentPosition + 224
+        bLDrive?.targetPosition = bLDrive!!.currentPosition + 224
+        bRDrive?.targetPosition = bRDrive!!.currentPosition + 224
+        Thread.sleep(3000)
+        setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER)
+
     }
 }
