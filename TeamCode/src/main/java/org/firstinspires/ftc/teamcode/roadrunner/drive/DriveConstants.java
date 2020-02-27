@@ -23,8 +23,8 @@ public class DriveConstants {
     /*
      * These are motor constants that should be listed online for your motors.
      */
-    public static final double TICKS_PER_REV = 1;
-    public static final double MAX_RPM = 1;
+    public static final double TICKS_PER_REV = 2240;
+    public static final double MAX_RPM = 150;
 
     /*
      * Set the first flag appropriately. If using the built-in motor velocity PID, update
@@ -41,9 +41,9 @@ public class DriveConstants {
      * angular distances although most angular parameters are wrapped in Math.toRadians() for
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
-    public static double WHEEL_RADIUS = 2;
-    public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 1;
+    public static double WHEEL_RADIUS = 2.95;
+    public static double GEAR_RATIO = 4.0 / 3.0; // output (wheel) speed / input (motor) speed
+    public static double TRACK_WIDTH = 9;
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -64,8 +64,8 @@ public class DriveConstants {
      * forces acceleration-limited profiling).
      */
     public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(
-            30.0, 30.0, 0.0,
-            Math.toRadians(180.0), Math.toRadians(180.0), 0.0
+            10, 10.0, 0.0,
+            Math.toRadians(90.0), Math.toRadians(90.0), 0.0
     );
 
 
