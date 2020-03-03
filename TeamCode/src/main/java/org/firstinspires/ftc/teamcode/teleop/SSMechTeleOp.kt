@@ -53,7 +53,7 @@ class SSMechTeleOp : OpMode() {
         robot.foundHooks(gamepad1) //operates foundation hooks
         robot.nyoomPark(gamepad2) //operates the tape measure
         robot.capGate(gamepad1) //operates the tape measure
-        robot.tipCapstone(gamepad1)
+        robot.tipCapstone(gamepad1) //operates the Capstone Flipper
         if(gamepad1.y)
             robot.turnAround()
 

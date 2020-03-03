@@ -298,7 +298,7 @@ class SSMechRobot {
 
     fun tipCapstone(gp: Gamepad){
         if (gp.x){
-            this.capstoneGate?.position = 0.2
+            this.capstoneFlipper?.position = 0.2
 /*            Thread.sleep(1000)
             this.capstoneFlipper?.position = 0.5
             Thread.sleep(3000)
