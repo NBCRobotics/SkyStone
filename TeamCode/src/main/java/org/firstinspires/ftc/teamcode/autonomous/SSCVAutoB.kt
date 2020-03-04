@@ -103,13 +103,13 @@ class SSCVAutoB : LinearOpMode() {
             val batteryV = 13.3 - robot.hub2!!.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS).toLong()
         }
         val bComp: Long = (batteryV * 10) //should equal to 200 when batteryV = 0.6
-        robot.drive(-0.8,0.8)
-        sleep(800)
-        robot.pause()
-
-        robot.drive(-1.0)
-        sleep(600)
-        robot.pause()
+//        robot.drive(-0.8,0.8)
+//        sleep(800)
+//        robot.pause()
+//
+//        robot.drive(-1.0)
+//        sleep(600)
+//        robot.pause()
 
         robot.drive(1.0) //Drives Forward to the Stones
         sleep(500 + (bComp / 2))

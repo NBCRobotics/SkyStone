@@ -43,7 +43,7 @@ class SSMechRobot {
     val clawUpPos = 0.6
     var slowDown = 1.85//default
     var slideP = 0.5 //h slide postion
-    val max = 5800
+    val max = 5525
     var linSlidePow: Float = 0.00.toFloat() //v slide power
     var tooHigh = true //if v slide is too high
     var tooLow = true //if v slide is too low
@@ -298,15 +298,15 @@ class SSMechRobot {
 
     fun tipCapstone(gp: Gamepad){
         if (gp.x){
-            this.capstoneFlipper?.position = 0.2
+            this.capstoneFlipper?.position = 0.0
 /*            Thread.sleep(1000)
             this.capstoneFlipper?.position = 0.5
-            Thread.sleep(3000)
+            Thread.sleep(3000)`
             this.capstoneFlipper?.position = 0.0
             this.capstoneGate?.position = 0.8*/
         }
         else{
-            this.capstoneFlipper?.position = 0.0
+            this.capstoneFlipper?.position = 0.09
         }
     }
 
